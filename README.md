@@ -1,4 +1,3 @@
-# sanaalt.com
 
 ## Project setup
 ```
