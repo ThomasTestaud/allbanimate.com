@@ -107,8 +107,7 @@ export default {
       const mouseY = event.clientY-this.canvasData.top;
 
       this.frames[this.displayedFrame].code +=
-        `
-        ctx.beginPath();
+        `ctx.beginPath();
         ctx.arc(${mouseX}, ${mouseY}, ${this.lineWidth}, 0, Math.PI * 2);
         ctx.fill();ctx.closePath();`;
 
