@@ -80,18 +80,22 @@ export default {
         {code: ""},
       ],
       frameRate: 3,
+      drawingToolsData: {
+        currentColor: 'blue',
+      },
       displayedFrame: 0,
       interval: null,
       canvas: null,
       canvasData: null,
       lineWidth: 10,
       penDown: false,
+      videoBeingPlayed: false,
+      onion: [0.01, 0.05, 0.1, 1, false, false, false],
     };
   },
   mounted() {
     this.canvas = this.$refs.canvas;
     this.canvasData = this.canvas.getBoundingClientRect();
-    console.log(this.canvasData);
     this.selectFrame(0);
   },
   methods: {
@@ -108,7 +112,6 @@ export default {
       if (event.key === 'ArrowRight') {
         this.nextFrame();
       }
-      console.log('key');
     },
 
     createNewFrame() {
@@ -117,18 +120,20 @@ export default {
 
     updateFrameRate(event) {
       this.frameRate = parseInt(event.target.value);
-      console.log(this.frameRate);
     },
 
     play() {
       this.stop();
+      this.videoBeingPlayed = true;
       this.interval = setInterval(() => {
         this.nextFrame();
       }, 1000/this.frameRate);
     },
 
     stop() {
+      this.videoBeingPlayed = false;
       clearInterval(this.interval);
+      this.readCurrentFrame();
     },
 
     nextFrame() {
@@ -155,15 +160,55 @@ export default {
     },
 
     readCurrentFrame() {
+      if (this.videoBeingPlayed) {
+        const canvas = this.$refs.canvas;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // Get the center coordinates of the canvas
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        console.log(centerX + centerY);
+  
+        eval(this.frames[this.displayedFrame].code);
+      } else {
+        this.displayOnionLayers();
+      }
+
+    },
+
+    displayOnionLayers() {
       const canvas = this.$refs.canvas;
       const ctx = canvas.getContext('2d');
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      // Get the center coordinates of the canvas
-      const centerX = canvas.width / 2;
-      const centerY = canvas.height / 2;
-      console.log(centerX + centerY);
+      const originalFrame = this.displayedFrame;
+      // Select the apropriate frame and draw the code
+      for(let i = 0; i < 3; i++) {
+        if(this.displayedFrame == 0) {
+          this.displayedFrame = this.frames.length -1;
+        } else {
+          this.displayedFrame--;
+        }
+      }
 
-      eval(this.frames[this.displayedFrame].code);
+      for(let i = 0; i < this.onion.length; i++) {
+        if (this.onion[i] !== false) {
+          // Select the opacity on the onion layer
+          ctx.globalAlpha = this.onion[i];
+          const centerX = canvas.width / 2;
+          const centerY = canvas.height / 2;
+          console.log(centerX + centerY);
+          eval(this.frames[this.displayedFrame].code);
+          // Go back to the selected frame
+        }
+        if(this.displayedFrame >= this.frames.length -1) {
+          this.displayedFrame = 0;
+        } else {
+          this.displayedFrame++;
+        }
+      }
+      this.displayedFrame = originalFrame;
+      // Put back to opcatity of the main frame
+      ctx.globalAlpha = this.onion[3];
     },
 
     handleMouseDown(event) {
@@ -177,12 +222,16 @@ export default {
         const mouseY = event.clientY-this.canvasData.top;
 
         this.frames[this.displayedFrame].code +=
-          `ctx.beginPath();
+          `
+          ctx.fillStyle = "${this.drawingToolsData.currentColor}";
+          ctx.strokeStyle = "${this.drawingToolsData.currentColor}";
+          ctx.beginPath();
           ctx.arc(${mouseX}, ${mouseY}, ${this.lineWidth}, 0, Math.PI * 2);
-          ctx.fill();ctx.closePath();`;
+          ctx.fill();
+          ctx.closePath();
+          `;
 
         this.readCurrentFrame();
-        console.log("code");
       }
     },
 
