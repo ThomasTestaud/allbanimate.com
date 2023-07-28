@@ -1,5 +1,5 @@
 <template>
-  <div @keydown="handleKeyPress">
+  <div @keydown="handleKeyPress(event)">
     <div id="upper-section">
       <div class="tool-section tool-section-left">
         <button><img src="@/assets/crayon.png" alt="crayon"></button>
@@ -21,14 +21,42 @@
       @mousedown="handleMouseDown" @mouseup="handleMouseUp" @mousemove="handleMouseMove"></canvas>
       <div class="tool-section">
         <p>Here more tools coming up...</p>
-        <div id="onion-parameters">
-          <button><img src="@/assets/onoin-3.png" alt="onion"></button>
-          <button><img src="@/assets/onoin-2.png" alt="onion"></button>
-          <button><img src="@/assets/onoin-1.png" alt="onion"></button>
-          <button><img src="@/assets/onion.png" alt="onion"></button>
-          <button><img src="@/assets/onoin+1.png" alt="onion"></button>
-          <button><img src="@/assets/onoin+2.png" alt="onion"></button>
-          <button><img src="@/assets/onoin+3.png" alt="onion"></button>
+        <div id="onion-parameters" @mousemove="displayOnionLayers">
+          <div class="onion-layer">
+            <input type="range" min="1" max="100" v-model="onionValue[0]" class="onion-slider">
+            <button v-if="onionLayerState[0] !== false" class="selected" @click="selectOnionLayer(0)"><img src="@/assets/onoin-3.png" alt="onion"></button>
+            <button v-else @click="unselectOnionLayer(0)"><img src="@/assets/onoin-3.png" alt="onion"></button>
+          </div>
+          <div class="onion-layer">
+            <input type="range" min="1" max="100" v-model="onionValue[1]" class="onion-slider">
+            <button v-if="onionLayerState[1] !== false" class="selected" @click="selectOnionLayer(1)"><img src="@/assets/onoin-2.png" alt="onion"></button>
+            <button v-else @click="unselectOnionLayer(1)"><img src="@/assets/onoin-2.png" alt="onion"></button>
+          </div>
+          <div class="onion-layer">
+            <input type="range" min="1" max="100" v-model="onionValue[2]" class="onion-slider">
+            <button v-if="onionLayerState[2] !== false" class="selected" @click="selectOnionLayer(2)"><img src="@/assets/onoin-1.png" alt="onion"></button>
+            <button v-else @click="unselectOnionLayer(2)"><img src="@/assets/onoin-1.png" alt="onion"></button>
+          </div>
+          <div class="onion-layer">
+            <input type="range" min="1" max="100" v-model="onionValue[3]" class="onion-slider">
+            <button v-if="onionLayerState[3] !== false" class="selected" @click="selectOnionLayer(3)"><img src="@/assets/onion.png" alt="onion"></button>
+            <button v-else @click="unselectOnionLayer(3)"><img src="@/assets/onion.png" alt="onion"></button>
+          </div>
+          <div class="onion-layer">
+            <input type="range" min="1" max="100" v-model="onionValue[4]" class="onion-slider">
+            <button v-if="onionLayerState[4] !== false" class="selected" @click="selectOnionLayer(4)"><img src="@/assets/onoin+1.png" alt="onion"></button>
+            <button v-else @click="unselectOnionLayer(4)"><img src="@/assets/onoin+1.png" alt="onion"></button>
+          </div>
+          <div class="onion-layer">
+            <input type="range" min="1" max="100" v-model="onionValue[5]" class="onion-slider">
+            <button v-if="onionLayerState[5] !== false" class="selected" @click="selectOnionLayer(5)"><img src="@/assets/onoin+2.png" alt="onion"></button>
+            <button v-else @click="unselectOnionLayer(5)"><img src="@/assets/onoin+2.png" alt="onion"></button>
+          </div>
+          <div class="onion-layer">
+            <input type="range" min="1" max="100" v-model="onionValue[6]" class="onion-slider">
+            <button v-if="onionLayerState[6] !== false" class="selected" @click="selectOnionLayer(6)"><img src="@/assets/onoin+3.png" alt="onion"></button>
+            <button v-else @click="unselectOnionLayer(6)"><img src="@/assets/onoin+3.png" alt="onion"></button>
+          </div>
         </div>
       </div>
     </div>
@@ -46,7 +74,7 @@
       </span>
       <span>
         <button @click="createNewFrame">Create new frame</button>
-        <button>Duplicate selected frame</button>
+        <button @click="duplicateSelectedFrame">Duplicate selected frame</button>
         <button @click="deleteSelectedFrame">Delete selected frame</button>
       </span>
     </div>
@@ -78,8 +106,9 @@ export default {
         {code: ""},
         {code: ""},
         {code: ""},
+        {code: ""},
       ],
-      frameRate: 3,
+      frameRate: 6,
       drawingToolsData: {
         currentColor: 'blue',
       },
@@ -90,7 +119,8 @@ export default {
       lineWidth: 10,
       penDown: false,
       videoBeingPlayed: false,
-      onion: [0.01, 0.05, 0.1, 1, false, false, false],
+      onionValue: [1, 5, 10, 100, 10, 5, 1],
+      onionLayerState: [true, true, true, true, false, false, false],
     };
   },
   mounted() {
@@ -99,6 +129,16 @@ export default {
     this.selectFrame(0);
   },
   methods: {
+
+    selectOnionLayer(index) {
+      this.onionLayerState[index] = false;
+      this.displayOnionLayers();
+    },
+    
+    unselectOnionLayer(index) {
+      this.onionLayerState[index] = true;
+      this.displayOnionLayers();
+    },
 
     deleteSelectedFrame() {
       this.frames.splice(this.displayedFrame, 1);
@@ -109,6 +149,7 @@ export default {
     },
 
     handleKeyPress(event) {
+      console.log("keypress");
       if (event.key === 'ArrowRight') {
         this.nextFrame();
       }
@@ -116,6 +157,10 @@ export default {
 
     createNewFrame() {
       this.frames.push({code: ""},);
+    },
+
+    duplicateSelectedFrame() {
+      this.frames.push(this.frames[this.displayedFrame]);
     },
 
     updateFrameRate(event) {
@@ -135,7 +180,7 @@ export default {
       clearInterval(this.interval);
       this.readCurrentFrame();
     },
-
+ 
     nextFrame() {
       if(this.displayedFrame >= this.frames.length -1) {
         this.displayedFrame = 0;
@@ -190,10 +235,10 @@ export default {
         }
       }
 
-      for(let i = 0; i < this.onion.length; i++) {
-        if (this.onion[i] !== false) {
+      for(let i = 0; i < this.onionValue.length; i++) {
+        if (this.onionLayerState[i]) {
           // Select the opacity on the onion layer
-          ctx.globalAlpha = this.onion[i];
+          ctx.globalAlpha = this.onionValue[i]/100;
           const centerX = canvas.width / 2;
           const centerY = canvas.height / 2;
           console.log(centerX + centerY);
@@ -208,10 +253,11 @@ export default {
       }
       this.displayedFrame = originalFrame;
       // Put back to opcatity of the main frame
-      ctx.globalAlpha = this.onion[3];
+      ctx.globalAlpha = this.onionValue[3]/100;
     },
 
     handleMouseDown(event) {
+      this.canvasData = this.canvas.getBoundingClientRect();
       this.penDown = true;
       this.handleMouseMove(event);
     },
@@ -295,10 +341,37 @@ export default {
     border: 1px solid grey;
     background-color: rgb(152, 152, 152);
     border-radius: 2px;
+    display: flex;
   }
 
-  #onion-parameters button {
-    margin: 2px;
+  .onion-layer {
+    position: relative;
+    height: 150px;
+    /*border: 1px solid red;*/
+    width: 40px;
+  }
+  .onion-layer + .onion-layer {
+    border-left: 1px dashed grey;
+  }
+  .onion-slider {
+    transform: rotate(-90deg);
+    position: absolute;
+    top: 45px;
+    left: -34px;
+    width: 100px;
+  }
+
+  .onion-layer button {
+    position: absolute;
+    height: 30px;
+    width: 30px;
+    bottom: -5px;
+    left: -4px;
+  }
+
+  .onion-layer button img {
+    max-height: 100%;
+    max-width: 100%;
   }
 
   #video-controls {
@@ -343,9 +416,11 @@ export default {
     margin: 1px;
   }
 
-  .selected-frame {
+  .selected-frame, .selected {
     border: 2px solid rgb(58, 58, 173);
     border-radius: 3px;
     background-color: rgb(182, 182, 217);
   }
+
+ 
 </style>
