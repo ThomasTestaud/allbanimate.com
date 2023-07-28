@@ -1,25 +1,44 @@
 <template>
-  <div @keydown="handleKeyPress(event)">
+  <div>
     <div id="upper-section">
-      <div class="tool-section tool-section-left">
-        <button><img src="@/assets/crayon.png" alt="crayon"></button>
-        <button><img src="@/assets/spray.png" alt="spray"></button>
-        <button><img src="@/assets/eraser.png" alt="eraser"></button>
-        <button><img src="@/assets/pipette.png" alt="pipette"></button>
-        <button><img src="@/assets/dots.png" alt="dots"></button>
-        <button><img src="@/assets/dots.png" alt="dots"></button>
-        <button><img src="@/assets/dots.png" alt="dots"></button>
-        <button><img src="@/assets/dots.png" alt="dots"></button>
-        <button><img src="@/assets/dots.png" alt="dots"></button>
-        <button><img src="@/assets/dots.png" alt="dots"></button>
-        <button><img src="@/assets/dots.png" alt="dots"></button>
-        <button><img src="@/assets/dots.png" alt="dots"></button>
-        <button><img src="@/assets/dots.png" alt="dots"></button>
-        <button><img src="@/assets/clearcanvas.png" alt="clearcanvas"></button>
+      
+      <div class="tool-section">
+        <div id="tool-parameters">
+          <div v-if="drawingToolsData.currentTool.size === true">
+            <label for="">Size: </label>
+            <input type="range" min="1" max="100" v-model="drawingToolsData.currentSize">
+          </div>
+          <div v-if="drawingToolsData.currentTool.opacity === true">
+            <label for="">Opacity: </label>
+            <input type="range" min="1" max="100" v-model="drawingToolsData.currentOpacity">
+          </div>
+          <div v-if="drawingToolsData.currentTool.particleSize === true">
+            <label for="">Particle size: </label>
+            <input type="range" min="1" max="15"  v-model="drawingToolsData.currentParticleSize">
+          </div>
+          <div v-if="drawingToolsData.currentTool.density === true">
+            <label for="">Density: </label>
+            <input type="range" min="1" max="100"  v-model="drawingToolsData.currentDensity">
+          </div>
+        </div>
+        <div class="tool-section-left">
+          <button v-if="drawingToolsData.currentTool === toolsMetaData.crayon" class="selected"><img src="@/assets/crayon.png" alt="crayon"></button>
+          <button v-else @click="selectTool(toolsMetaData.crayon)"><img src="@/assets/crayon.png" alt="crayon"></button>
+          <button v-if="drawingToolsData.currentTool === toolsMetaData.spray" class="selected"><img src="@/assets/spray.png" alt="spray"></button>
+          <button v-else @click="selectTool(toolsMetaData.spray)"><img src="@/assets/spray.png" alt="spray"></button>
+          <button><img src="@/assets/eraser.png" alt="eraser"></button>
+          <button><img src="@/assets/pipette.png" alt="pipette"></button>
+          <button><img src="@/assets/dots.png" alt="dots"></button>
+          <button><img src="@/assets/dots.png" alt="dots"></button>
+          <button><img src="@/assets/dots.png" alt="dots"></button>
+          <button><img src="@/assets/dots.png" alt="dots"></button>
+          <button><img src="@/assets/dots.png" alt="dots"></button>
+          <button><img src="@/assets/clearcanvas.png" alt="clearcanvas"></button>
+        </div>
       </div>
       <canvas ref="canvas" id="myCanvas" width="800" height="500"
       @mousedown="handleMouseDown" @mouseup="handleMouseUp" @mousemove="handleMouseMove"></canvas>
-      <div class="tool-section">
+      <div class="tool-section tool-section-right">
         <p>Here more tools coming up...</p>
         <div id="onion-parameters" @mousemove="displayOnionLayers">
           <div class="onion-layer">
@@ -110,7 +129,12 @@ export default {
       ],
       frameRate: 6,
       drawingToolsData: {
-        currentColor: 'blue',
+        currentTool: false,
+        currentColor: false,
+        currentSize: 30,
+        currentOpacity: 100,
+        currentParticleSize: 1,
+        currentDensity: 100,
       },
       displayedFrame: 0,
       interval: null,
@@ -121,14 +145,34 @@ export default {
       videoBeingPlayed: false,
       onionValue: [1, 5, 10, 100, 10, 5, 1],
       onionLayerState: [true, true, true, true, false, false, false],
+      toolsMetaData: {
+        crayon: {
+          size: true,
+          opacity: true,
+          particleSize: false,
+          density: false,
+        },
+        spray: {
+          size: true,
+          opacity: true,
+          particleSize: true,
+          density: true,
+        },
+      },
     };
   },
   mounted() {
     this.canvas = this.$refs.canvas;
     this.canvasData = this.canvas.getBoundingClientRect();
     this.selectFrame(0);
+    this.selectTool(this.toolsMetaData.spray);
+    this.drawingToolsData.currentColor = `rgba(0, 0, 0, ${this.drawingToolsData.currentOpacity/100})`;
   },
   methods: {
+    
+    setCurrentSize(newValue) {
+      this.drawingToolsData.currentSize = newValue;
+    },
 
     selectOnionLayer(index) {
       this.onionLayerState[index] = false;
@@ -218,7 +262,17 @@ export default {
       } else {
         this.displayOnionLayers();
       }
+    },
 
+    readNewStroke(newStroke) {
+      const canvas = this.$refs.canvas;
+      const ctx = canvas.getContext('2d');
+      // Get the center coordinates of the canvas
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      console.log(centerX + centerY + ctx);
+  
+      eval(newStroke);
     },
 
     displayOnionLayers() {
@@ -256,29 +310,66 @@ export default {
       ctx.globalAlpha = this.onionValue[3]/100;
     },
 
+    selectTool(tool) {
+      this.drawingToolsData.currentTool = tool;
+    },
+
+    draw(event) {
+      if(this.penDown) {
+        const mouseX = event.clientX-this.canvasData.left;
+        const mouseY = event.clientY-this.canvasData.top;
+
+        if (this.drawingToolsData.currentTool === this.toolsMetaData.crayon) {
+          //ctx.globalAlpha = "${this.drawingToolsData.currentOpacity/100}";
+          const newStroke = `
+            ctx.fillStyle = "${this.drawingToolsData.currentColor}";
+            ctx.strokeStyle = "${this.drawingToolsData.currentColor}";
+            ctx.beginPath();
+            ctx.arc(${mouseX}, ${mouseY}, ${this.drawingToolsData.currentSize}, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.closePath();
+            `;
+
+          this.frames[this.displayedFrame].code += newStroke;
+          this.readNewStroke(newStroke);
+
+        } else if (this.drawingToolsData.currentTool === this.toolsMetaData.spray) {
+
+          for(let i = 0; i < 10; i++) {
+
+            let rawX = Math.random() * 2 - 1;
+            let rawY = Math.random() * 2 - 1;
+            let x = (rawX * Math.cos(rawY * (Math.PI*3))) * this.drawingToolsData.currentSize;
+            let y = (rawY * Math.cos(rawX * (Math.PI*3))) * this.drawingToolsData.currentSize;
+
+            //ctx.globalAlpha = "${this.drawingToolsData.currentOpacity/100}";
+            const newStroke =
+            `
+              ctx.fillStyle = "${this.drawingToolsData.currentColor}";
+              ctx.strokeStyle = "${this.drawingToolsData.currentColor}";
+              ctx.beginPath();
+              ctx.arc(${mouseX + x}, ${mouseY + y}, ${this.drawingToolsData.currentParticleSize}, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.closePath();
+              `;
+            
+              this.frames[this.displayedFrame].code += newStroke;
+              this.readNewStroke(newStroke);
+          }
+        }
+      }
+    },
+
     handleMouseDown(event) {
+      //Update color opacity
+      this.drawingToolsData.currentColor = `rgba(0, 0, 0, ${this.drawingToolsData.currentOpacity/100})`; 
       this.canvasData = this.canvas.getBoundingClientRect();
       this.penDown = true;
       this.handleMouseMove(event);
     },
 
     handleMouseMove(event) {
-      if(this.penDown) {
-        const mouseX = event.clientX-this.canvasData.left;
-        const mouseY = event.clientY-this.canvasData.top;
-
-        this.frames[this.displayedFrame].code +=
-          `
-          ctx.fillStyle = "${this.drawingToolsData.currentColor}";
-          ctx.strokeStyle = "${this.drawingToolsData.currentColor}";
-          ctx.beginPath();
-          ctx.arc(${mouseX}, ${mouseY}, ${this.lineWidth}, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.closePath();
-          `;
-
-        this.readCurrentFrame();
-      }
+      this.draw(event);
     },
 
     handleMouseUp() {
@@ -303,6 +394,7 @@ export default {
   canvas,
   #lower-section {
     border: 1px solid rgb(57, 57, 57);
+    border-radius: 3px;
   }
 
   canvas {
@@ -318,12 +410,41 @@ export default {
 
   .tool-section {
     /*max-width: 200px;*/
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  #tool-parameters {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid grey;
+    background-color: rgb(152, 152, 152);
+    border-radius: 3px;
+    padding-top: 5px;
+  }
+
+  #tool-parameters div {
+    display: flex;
+    flex-direction: column;
+  }
+
+  #tool-parameters div + div {
+    border-top: 1px dashed grey;
+  }
+
+  #tool-parameters label {
+    font-size: 12px;
+    opacity: 0.8;
+    margin-left: 5px;
   }
 
   .tool-section-left {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     align-content: flex-start; 
+    height: auto; /* Make the child element take all available height */
+    box-sizing: border-box;
   }
 
   button img {
@@ -335,6 +456,12 @@ export default {
     margin: 0.5rem;
     height: 3rem;
     cursor: pointer;
+  }
+
+  .tool-section-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
 
   #onion-parameters {
