@@ -6,7 +6,7 @@
         <div id="tool-parameters">
           <div v-if="drawingToolsData.currentTool.size === true">
             <label for="">Size: </label>
-            <input type="range" min="1" max="100" v-model="drawingToolsData.currentSize">
+            <input type="range" min="1" max="150" v-model="drawingToolsData.currentSize">
           </div>
           <div v-if="drawingToolsData.currentTool.opacity === true">
             <label for="">Opacity: </label>
@@ -18,7 +18,7 @@
           </div>
           <div v-if="drawingToolsData.currentTool.density === true">
             <label for="">Density: </label>
-            <input type="range" min="1" max="100"  v-model="drawingToolsData.currentDensity">
+            <input type="range" min="1" max="60"  v-model="drawingToolsData.currentDensity">
           </div>
         </div>
         <div class="tool-section-left">
@@ -39,7 +39,9 @@
       <canvas ref="canvas" id="myCanvas" width="800" height="500"
       @mousedown="handleMouseDown" @mouseup="handleMouseUp" @mousemove="handleMouseMove"></canvas>
       <div class="tool-section tool-section-right">
-        <p>Here more tools coming up...</p>
+        <div id="color-tools">
+          <canvas ref="colorCanvas" id="color-canvas" width="300" height="100" @click="pickColorFromColorCanvas"></canvas>
+        </div>
         <div id="onion-parameters" @mousemove="displayOnionLayers">
           <div class="onion-layer">
             <input type="range" min="1" max="100" v-model="onionValue[0]" class="onion-slider">
@@ -131,10 +133,11 @@ export default {
       drawingToolsData: {
         currentTool: false,
         currentColor: false,
-        currentSize: 30,
+        currentSize: 10,
         currentOpacity: 100,
-        currentParticleSize: 1,
-        currentDensity: 100,
+        currentParticleSize: 3,
+        currentDensity: 40,
+        currentRGB: [0, 0, 0],
       },
       displayedFrame: 0,
       interval: null,
@@ -165,10 +168,12 @@ export default {
     this.canvas = this.$refs.canvas;
     this.canvasData = this.canvas.getBoundingClientRect();
     this.selectFrame(0);
-    this.selectTool(this.toolsMetaData.spray);
+    this.selectTool(this.toolsMetaData.crayon);
     this.drawingToolsData.currentColor = `rgba(0, 0, 0, ${this.drawingToolsData.currentOpacity/100})`;
+    this.drawColorCanvas();
   },
   methods: {
+    
     
     setCurrentSize(newValue) {
       this.drawingToolsData.currentSize = newValue;
@@ -335,7 +340,7 @@ export default {
 
         } else if (this.drawingToolsData.currentTool === this.toolsMetaData.spray) {
 
-          for(let i = 0; i < 10; i++) {
+          for(let i = 0; i < this.drawingToolsData.currentDensity; i++) {
 
             let rawX = Math.random() * 2 - 1;
             let rawY = Math.random() * 2 - 1;
@@ -348,7 +353,7 @@ export default {
               ctx.fillStyle = "${this.drawingToolsData.currentColor}";
               ctx.strokeStyle = "${this.drawingToolsData.currentColor}";
               ctx.beginPath();
-              ctx.arc(${mouseX + x}, ${mouseY + y}, ${this.drawingToolsData.currentParticleSize}, 0, Math.PI * 2);
+              ctx.arc(${mouseX + x}, ${mouseY + y}, ${(this.drawingToolsData.currentParticleSize/10)*(this.drawingToolsData.currentSize/2)}, 0, Math.PI * 2);
               ctx.fill();
               ctx.closePath();
               `;
@@ -362,7 +367,7 @@ export default {
 
     handleMouseDown(event) {
       //Update color opacity
-      this.drawingToolsData.currentColor = `rgba(0, 0, 0, ${this.drawingToolsData.currentOpacity/100})`; 
+      this.drawingToolsData.currentColor = `rgba(${this.drawingToolsData.currentRGB[0]}, ${this.drawingToolsData.currentRGB[1]}, ${this.drawingToolsData.currentRGB[2]}, ${this.drawingToolsData.currentOpacity/100})`; 
       this.canvasData = this.canvas.getBoundingClientRect();
       this.penDown = true;
       this.handleMouseMove(event);
@@ -374,6 +379,53 @@ export default {
 
     handleMouseUp() {
       this.penDown = false;
+    },
+
+    pickColorFromColorCanvas(event) {
+      const canvas2 = this.$refs.colorCanvas;
+      const ctx2 = canvas2.getContext('2d');
+      const rectangle = this.$refs.colorCanvas.getBoundingClientRect();
+      
+      const x = event.clientX - rectangle.left;
+      const y = event.clientY - rectangle.top;
+      
+      let palette = ctx2.getImageData(x, y, 1, 1);
+      
+      // Enregistrement des valeurs RGB.
+      console.log(this.drawingToolsData.currentRGB);
+      this.drawingToolsData.currentRGB[0] = palette.data[0];
+      this.drawingToolsData.currentRGB[1] = palette.data[1];
+      this.drawingToolsData.currentRGB[2] = palette.data[2];
+    },
+
+    drawColorCanvas() {
+      const canvas2 = this.$refs.colorCanvas;
+      const ctx2 = canvas2.getContext('2d');
+  
+      let gradient = ctx2.createLinearGradient(0, 0, canvas2.width, 0);
+  
+      // Dégradé rouge -> vert -> bleu horizontal.
+      gradient.addColorStop(0, 'rgb(255,   0,   0)');
+      gradient.addColorStop(0.15, 'rgb(255,   0, 255)');
+      gradient.addColorStop(0.32, 'rgb(0,     0, 255)');
+      gradient.addColorStop(0.49, 'rgb(0,   255, 255)');
+      gradient.addColorStop(0.66, 'rgb(0,   255,   0)');
+      gradient.addColorStop(0.83, 'rgb(255, 255,   0)');
+      gradient.addColorStop(1, 'rgb(255,   0,   0)');
+  
+      ctx2.fillStyle = gradient;
+      ctx2.fillRect(0, 0, canvas2.width, canvas2.height);
+  
+      gradient = ctx2.createLinearGradient(0, 0, 0, canvas2.height);
+  
+      // Dégradé blanc opaque -> transparent -> noir opaque vertical.
+      gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
+      gradient.addColorStop(0.5, 'rgba(255, 255, 255, 0)');
+      gradient.addColorStop(0.5, 'rgba(0,     0,   0, 0)');
+      gradient.addColorStop(1, 'rgba(0,     0,   0, 1)');
+  
+      ctx2.fillStyle = gradient;
+      ctx2.fillRect(0, 0, canvas2.width, canvas2.height);
     },
   },
 }
@@ -397,9 +449,15 @@ export default {
     border-radius: 3px;
   }
 
-  canvas {
-    width: 800px;
-    height: 500px;
+  canvas:hover {
+    cursor: crosshair;
+  }
+
+  #color-canvas {
+    /*width: 100%;*/
+  }
+
+  #myCanvas {
     background-color: rgb(240, 240, 240);
   }
 
