@@ -100,13 +100,24 @@
       </span>
     </div>
     <div id="lower-section">
-      <div id="timeline">
+      <!--<div id="timeline">
         <div class="layer">
           <span class="frame" v-for="(frame, index) in frames" :key="frame.code" @click="selectFrame(index)">
             <button v-if="index == displayedFrame" class="selected-frame"></button>
             <button v-else></button>
           </span>
         </div>
+      </div>-->
+
+      <div id="timeline">
+        <div v-for="(frames, calkIndex) in calkLayers" :key="frames" class="layer" @click="selectedCalk = calkIndex">
+          <span class="frame" v-for="(frame, index) in frames" :key="frame.code" @click="selectFrame(index)">
+            <button v-if="index == displayedFrame && calkIndex == selectedCalk" class="selected-frame"></button>
+            <button v-else-if="index == displayedFrame && calkIndex !== selectedCalk" class="semi-selected-frame"></button>
+            <button v-else></button>
+          </span>
+        </div>
+        
       </div>
     </div>
   </div>
@@ -129,6 +140,26 @@ export default {
         {code: ""},
         {code: ""},
       ],
+      calkLayers: [
+        [
+          {code: ""},
+          {code: ""},
+          {code: ""},
+          {code: ""},
+          {code: ""},
+          {code: ""},
+          {code: ""},
+        ],
+        [
+          {code: ""},
+          {code: ""},
+          {code: ""},
+          {code: ""},
+          {code: ""},
+          {code: ""},
+          {code: ""},
+        ]
+      ],
       frameRate: 6,
       drawingToolsData: {
         currentTool: false,
@@ -140,6 +171,7 @@ export default {
         currentRGB: [0, 0, 0],
       },
       displayedFrame: 0,
+      selectedCalk: 0,
       interval: null,
       canvas: null,
       canvasData: null,
@@ -205,7 +237,7 @@ export default {
     },
 
     createNewFrame() {
-      this.frames.push({code: ""},);
+      this.calkLayers[this.selectedCalk].push({code: ""},);
     },
 
     duplicateSelectedFrame() {
@@ -607,5 +639,10 @@ export default {
     background-color: rgb(182, 182, 217);
   }
 
+  .semi-selected-frame {
+    background-color: rgb(182, 182, 217);
+    border-radius: 3px;
+    border: 2px solid rgb(139, 139, 139);
+  }
  
 </style>
