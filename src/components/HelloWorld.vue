@@ -100,16 +100,8 @@
       </span>
     </div>
     <div id="lower-section">
-      <!--<div id="timeline">
-        <div class="layer">
-          <span class="frame" v-for="(frame, index) in frames" :key="frame.code" @click="selectFrame(index)">
-            <button v-if="index == displayedFrame" class="selected-frame"></button>
-            <button v-else></button>
-          </span>
-        </div>
-      </div>-->
 
-      <div id="timeline">
+      <div id="timeline" @click="readCurrentFrame">
         <div v-for="(frames, calkIndex) in calkLayers" :key="frames" class="layer" @click="selectedCalk = calkIndex">
           <span class="frame" v-for="(frame, index) in frames" :key="frame.code" @click="selectFrame(index)">
             <button v-if="index == displayedFrame && calkIndex == selectedCalk" class="selected-frame"></button>
@@ -222,8 +214,8 @@ export default {
     },
 
     deleteSelectedFrame() {
-      this.frames.splice(this.displayedFrame, 1);
-      if(this.displayedFrame == this.frames.length) {
+      this.calkLayers[this.selectedCalk].splice(this.displayedFrame, 1);
+      if(this.displayedFrame == this.calkLayers[this.selectedCalk].length) {
         this.displayedFrame--;
       }
       this.readCurrentFrame();
@@ -241,7 +233,7 @@ export default {
     },
 
     duplicateSelectedFrame() {
-      this.frames.push(this.frames[this.displayedFrame]);
+      this.calkLayers[this.selectedCalk].push(this.calkLayers[this.selectedCalk][this.displayedFrame]);
     },
 
     updateFrameRate(event) {
@@ -263,7 +255,7 @@ export default {
     },
  
     nextFrame() {
-      if(this.displayedFrame >= this.frames.length -1) {
+      if(this.displayedFrame >= this.calkLayers[this.selectedCalk].length -1) {
         this.displayedFrame = 0;
       } else {
         this.displayedFrame++;
@@ -273,7 +265,7 @@ export default {
 
     previousFrame() {
       if(this.displayedFrame == 0) {
-        this.displayedFrame = this.frames.length -1;
+        this.displayedFrame = this.calkLayers[this.selectedCalk].length -1;
       } else {
         this.displayedFrame--;
       }
@@ -294,8 +286,11 @@ export default {
         const centerX = canvas.width / 2;
         const centerY = canvas.height / 2;
         console.log(centerX + centerY);
-  
-        eval(this.frames[this.displayedFrame].code);
+        
+        this.calkLayers.forEach((layer, index) => {
+          eval(this.calkLayers[index][this.displayedFrame].code);
+        });
+
       } else {
         this.displayOnionLayers();
       }
@@ -317,10 +312,11 @@ export default {
       const ctx = canvas.getContext('2d');
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const originalFrame = this.displayedFrame;
+      this.calkLayers.forEach((layer, index) => {
       // Select the apropriate frame and draw the code
       for(let i = 0; i < 3; i++) {
         if(this.displayedFrame == 0) {
-          this.displayedFrame = this.frames.length -1;
+          this.displayedFrame = this.calkLayers[this.selectedCalk].length -1;
         } else {
           this.displayedFrame--;
         }
@@ -333,16 +329,19 @@ export default {
           const centerX = canvas.width / 2;
           const centerY = canvas.height / 2;
           console.log(centerX + centerY);
-          eval(this.frames[this.displayedFrame].code);
+          
+            eval(this.calkLayers[index][this.displayedFrame].code);
+            
+          }
           // Go back to the selected frame
+          if(this.displayedFrame >= this.calkLayers[this.selectedCalk].length -1) {
+            this.displayedFrame = 0;
+          } else {
+            this.displayedFrame++;
+          }
         }
-        if(this.displayedFrame >= this.frames.length -1) {
-          this.displayedFrame = 0;
-        } else {
-          this.displayedFrame++;
-        }
-      }
-      this.displayedFrame = originalFrame;
+        this.displayedFrame = originalFrame;
+      });
       // Put back to opcatity of the main frame
       ctx.globalAlpha = this.onionValue[3]/100;
     },
@@ -367,7 +366,7 @@ export default {
             ctx.closePath();
             `;
 
-          this.frames[this.displayedFrame].code += newStroke;
+          this.calkLayers[this.selectedCalk][this.displayedFrame].code += newStroke;
           this.readNewStroke(newStroke);
 
         } else if (this.drawingToolsData.currentTool === this.toolsMetaData.spray) {
@@ -390,7 +389,7 @@ export default {
               ctx.closePath();
               `;
             
-              this.frames[this.displayedFrame].code += newStroke;
+              this.calkLayers[this.selectedCalk][this.displayedFrame].code += newStroke;
               this.readNewStroke(newStroke);
           }
         }
