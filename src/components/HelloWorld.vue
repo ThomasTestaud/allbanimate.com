@@ -32,8 +32,8 @@
           <button><img src="@/assets/dots.png" alt="dots"></button>
           <button><img src="@/assets/dots.png" alt="dots"></button>
           <button><img src="@/assets/dots.png" alt="dots"></button>
-          <button><img src="@/assets/dots.png" alt="dots"></button>
-          <button><img src="@/assets/clearcanvas.png" alt="clearcanvas"></button>
+          <button @click="blackCanvas"><img src="@/assets/empty-canvas.png" alt="empty-canvas"></button>
+          <button @click="emptyCanvas"><img src="@/assets/clearcanvas.png" alt="clearcanvas"></button>
         </div>
       </div>
       <canvas ref="canvas" id="myCanvas" width="800" height="500"
@@ -103,7 +103,40 @@
 
       <div id="timeline" @click="readCurrentFrame">
         <div v-for="(frames, calkIndex) in calkLayers" :key="frames" class="layer" @click="selectedCalk = calkIndex">
-          <span>Layer {{ calkIndex + 1}}</span>
+          <span v-if="calkIndex == selectedCalk" class="layer-head layer-head-selected">
+            <div>Layer {{ calkIndex + 1}}</div>
+            <div class="layer-arrows">
+              <button>
+                <img src="@/assets/arrow-up.png" alt="arrow-up">
+              </button>
+              <button>
+                <img src="@/assets/arrow-down.png" alt="arrow-down">
+              </button>
+            </div>
+            <button v-if="calkIndex == selectedCalk">
+              <img src="@/assets/open-eye.png" alt="open-eye">
+            </button>
+            <button v-else>
+              <img src="@/assets/closed-eye.png" alt="closed-eye">
+            </button>
+          </span>
+          <span v-else class="layer-head">
+            <div>Layer {{ calkIndex + 1}}</div>
+            <div class="layer-arrows">
+              <button>
+                <img src="@/assets/arrow-up.png" alt="arrow-up">
+              </button>
+              <button>
+                <img src="@/assets/arrow-down.png" alt="arrow-down">
+              </button>
+            </div>
+            <button v-if="calkIndex == selectedCalk">
+              <img src="@/assets/open-eye.png" alt="open-eye">
+            </button>
+            <button v-else>
+              <img src="@/assets/closed-eye.png" alt="closed-eye">
+            </button>
+          </span>
           <span class="frame" v-for="(frame, index) in frames" :key="frame.code" @click="selectFrame(index)">
             <button v-if="index == displayedFrame && calkIndex == selectedCalk && frame.code === ''" class="empty-selected-frame"></button>
             <button v-else-if="index == displayedFrame && calkIndex == selectedCalk && frame.code !== ''" class="selected-frame"></button>
@@ -201,7 +234,15 @@ export default {
     this.drawColorCanvas();
   },
   methods: {
-    
+    blackCanvas() {
+      this.calkLayers[this.selectedCalk][this.displayedFrame].code = "/**/";
+      this.readCurrentFrame();
+    },
+
+    emptyCanvas() {
+      this.calkLayers[this.selectedCalk][this.displayedFrame].code = "";
+      this.readCurrentFrame();
+    },
     
     setCurrentSize(newValue) {
       this.drawingToolsData.currentSize = newValue;
@@ -218,7 +259,10 @@ export default {
     },
 
     deleteSelectedFrame() {
-      this.calkLayers[this.selectedCalk].splice(this.displayedFrame, 1);
+      //this.calkLayers[this.selectedCalk].splice(this.displayedFrame, 1);
+      this.calkLayers.forEach((layer) => {
+        layer.splice(this.displayedFrame, 1);
+      });
       if(this.displayedFrame == this.calkLayers[this.selectedCalk].length) {
         this.displayedFrame--;
       }
@@ -239,7 +283,10 @@ export default {
     },
 
     duplicateSelectedFrame() {
-      this.calkLayers[this.selectedCalk].push(this.calkLayers[this.selectedCalk][this.displayedFrame]);
+      //this.calkLayers[this.selectedCalk].push(this.calkLayers[this.selectedCalk][this.displayedFrame]);
+      this.calkLayers.forEach((layer) => {
+        layer.push(layer[this.displayedFrame]);
+      });
     },
 
     updateFrameRate(event) {
@@ -285,18 +332,12 @@ export default {
     },
 
     returnLastDrawnedFrameFrom(layer, frame) {
-      //console.log(frame);
-      //console.log("code = "+this.calkLayers[layer][frame].code);
       if(this.calkLayers[layer][frame].code !== "") {
-        //console.log('reutrn code');
-        //console.log(this.calkLayers[layer][frame].code);
         return this.calkLayers[layer][frame].code;
       }
       if(frame === 0) {
-        //console.log('reutrn at index 0');
         return this.calkLayers[layer][frame].code;
       }
-      //console.log('recurse');
       return this.returnLastDrawnedFrameFrom(layer, frame-1);
     },
 
@@ -311,7 +352,6 @@ export default {
         console.log(centerX + centerY);
         
         this.calkLayers.forEach((layer, index) => {
-          //eval(this.calkLayers[index][this.displayedFrame].code);
           eval(this.returnLastDrawnedFrameFrom(index, this.displayedFrame));
         });
 
@@ -509,10 +549,6 @@ export default {
     cursor: crosshair;
   }
 
-  #color-canvas {
-    /*width: 100%;*/
-  }
-
   #myCanvas {
     background-color: rgb(240, 240, 240);
   }
@@ -523,7 +559,6 @@ export default {
   }
 
   .tool-section {
-    /*max-width: 200px;*/
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -688,5 +723,51 @@ export default {
     border-radius: 3px;
     border: 2px solid grey;
   }
- 
+
+  .layer {
+    display: flex;
+    align-items: center;
+  }
+
+  .layer + .layer {
+    border-bottom: 1px dashed grey;
+  }
+
+  .layer-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: auto;
+    border: 2px solid grey;
+    border-radius: 3px;
+    background-color: rgb(152, 152, 152);
+    padding: 4px;
+    width: 150px;
+  }
+
+  .layer-head-selected {
+    border: 2px solid rgb(58, 58, 173);
+    background-color: rgb(168, 168, 221);
+  }
+  .layer-arrows {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .layer-head button {
+    height: 2rem;
+    width: 2rem;
+  }
+  .layer-head img {
+    height: 1rem;
+    width: 1rem;
+  }
+  
+  .layer-arrows button {
+    height: 15px;
+  }
+  .layer-arrows img {
+    height: 100%;
+    width: 1rem;
+  }
 </style>
