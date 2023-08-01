@@ -103,9 +103,13 @@
 
       <div id="timeline" @click="readCurrentFrame">
         <div v-for="(frames, calkIndex) in calkLayers" :key="frames" class="layer" @click="selectedCalk = calkIndex">
+          <span>Layer {{ calkIndex + 1}}</span>
           <span class="frame" v-for="(frame, index) in frames" :key="frame.code" @click="selectFrame(index)">
-            <button v-if="index == displayedFrame && calkIndex == selectedCalk" class="selected-frame"></button>
-            <button v-else-if="index == displayedFrame && calkIndex !== selectedCalk" class="semi-selected-frame"></button>
+            <button v-if="index == displayedFrame && calkIndex == selectedCalk && frame.code === ''" class="empty-selected-frame"></button>
+            <button v-else-if="index == displayedFrame && calkIndex == selectedCalk && frame.code !== ''" class="selected-frame"></button>
+            <button v-else-if="index == displayedFrame && calkIndex !== selectedCalk && frame.code === ''" class="empty-semi-selected-frame"></button>
+            <button v-else-if="index == displayedFrame && calkIndex !== selectedCalk && frame.code !== ''" class="semi-selected-frame"></button>
+            <button v-else-if="frame.code === ''" class="empty-frame"></button>
             <button v-else></button>
           </span>
         </div>
@@ -123,15 +127,6 @@ export default {
   },
   data() {
     return {
-      frames: [
-        {code: ""},
-        {code: ""},
-        {code: ""},
-        {code: ""},
-        {code: ""},
-        {code: ""},
-        {code: ""},
-      ],
       calkLayers: [
         [
           {code: ""},
@@ -150,7 +145,16 @@ export default {
           {code: ""},
           {code: ""},
           {code: ""},
-        ]
+        ],
+        [
+          {code: ""},
+          {code: ""},
+          {code: ""},
+          {code: ""},
+          {code: ""},
+          {code: ""},
+          {code: ""},
+        ],
       ],
       frameRate: 6,
       drawingToolsData: {
@@ -229,7 +233,9 @@ export default {
     },
 
     createNewFrame() {
-      this.calkLayers[this.selectedCalk].push({code: ""},);
+      this.calkLayers.forEach((layer) => {
+        layer.push({code: ""},);
+      });
     },
 
     duplicateSelectedFrame() {
@@ -240,19 +246,6 @@ export default {
       this.frameRate = parseInt(event.target.value);
     },
 
-    play() {
-      this.stop();
-      this.videoBeingPlayed = true;
-      this.interval = setInterval(() => {
-        this.nextFrame();
-      }, 1000/this.frameRate);
-    },
-
-    stop() {
-      this.videoBeingPlayed = false;
-      clearInterval(this.interval);
-      this.readCurrentFrame();
-    },
  
     nextFrame() {
       if(this.displayedFrame >= this.calkLayers[this.selectedCalk].length -1) {
@@ -277,6 +270,36 @@ export default {
       this.readCurrentFrame();
     },
 
+    play() {
+      this.stop();
+      this.videoBeingPlayed = true;
+      this.interval = setInterval(() => {
+        this.nextFrame();
+      }, 1000/this.frameRate);
+    },
+
+    stop() {
+      this.videoBeingPlayed = false;
+      clearInterval(this.interval);
+      this.readCurrentFrame();
+    },
+
+    returnLastDrawnedFrameFrom(layer, frame) {
+      //console.log(frame);
+      //console.log("code = "+this.calkLayers[layer][frame].code);
+      if(this.calkLayers[layer][frame].code !== "") {
+        //console.log('reutrn code');
+        //console.log(this.calkLayers[layer][frame].code);
+        return this.calkLayers[layer][frame].code;
+      }
+      if(frame === 0) {
+        //console.log('reutrn at index 0');
+        return this.calkLayers[layer][frame].code;
+      }
+      //console.log('recurse');
+      return this.returnLastDrawnedFrameFrom(layer, frame-1);
+    },
+
     readCurrentFrame() {
       if (this.videoBeingPlayed) {
         const canvas = this.$refs.canvas;
@@ -288,7 +311,8 @@ export default {
         console.log(centerX + centerY);
         
         this.calkLayers.forEach((layer, index) => {
-          eval(this.calkLayers[index][this.displayedFrame].code);
+          //eval(this.calkLayers[index][this.displayedFrame].code);
+          eval(this.returnLastDrawnedFrameFrom(index, this.displayedFrame));
         });
 
       } else {
@@ -296,42 +320,32 @@ export default {
       }
     },
 
-    readNewStroke(newStroke) {
-      const canvas = this.$refs.canvas;
-      const ctx = canvas.getContext('2d');
-      // Get the center coordinates of the canvas
-      const centerX = canvas.width / 2;
-      const centerY = canvas.height / 2;
-      console.log(centerX + centerY + ctx);
-  
-      eval(newStroke);
-    },
-
     displayOnionLayers() {
+
       const canvas = this.$refs.canvas;
       const ctx = canvas.getContext('2d');
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const originalFrame = this.displayedFrame;
-      this.calkLayers.forEach((layer, index) => {
-      // Select the apropriate frame and draw the code
-      for(let i = 0; i < 3; i++) {
-        if(this.displayedFrame == 0) {
-          this.displayedFrame = this.calkLayers[this.selectedCalk].length -1;
-        } else {
-          this.displayedFrame--;
-        }
-      }
 
-      for(let i = 0; i < this.onionValue.length; i++) {
-        if (this.onionLayerState[i]) {
-          // Select the opacity on the onion layer
-          ctx.globalAlpha = this.onionValue[i]/100;
-          const centerX = canvas.width / 2;
-          const centerY = canvas.height / 2;
-          console.log(centerX + centerY);
-          
-            eval(this.calkLayers[index][this.displayedFrame].code);
-            
+      this.calkLayers.forEach((layer, index) => {
+        // Select the apropriate frame and draw the code
+        for(let i = 0; i < 3; i++) {
+          if(this.displayedFrame == 0) {
+            this.displayedFrame = this.calkLayers[this.selectedCalk].length -1;
+          } else {
+            this.displayedFrame--;
+          }
+        }
+
+        for(let i = 0; i < this.onionValue.length; i++) {
+          if (this.onionLayerState[i]) {
+            // Select the opacity on the onion layer
+            ctx.globalAlpha = this.onionValue[i]/100;
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            console.log(centerX + centerY);
+            //eval(this.calkLayers[index][this.displayedFrame].code);
+            eval(this.returnLastDrawnedFrameFrom(index, this.displayedFrame));
           }
           // Go back to the selected frame
           if(this.displayedFrame >= this.calkLayers[this.selectedCalk].length -1) {
@@ -348,6 +362,17 @@ export default {
 
     selectTool(tool) {
       this.drawingToolsData.currentTool = tool;
+    },
+
+    readNewStroke(newStroke) {
+      const canvas = this.$refs.canvas;
+      const ctx = canvas.getContext('2d');
+      // Get the center coordinates of the canvas
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      console.log(centerX + centerY + ctx);
+  
+      eval(newStroke);
     },
 
     draw(event) {
@@ -620,6 +645,9 @@ export default {
 
   #timeline {
     /*border: 1px solid red;*/
+    display: flex;
+    flex-direction: column;
+    flex-direction: column-reverse;
   }
 
   #lower-section {
@@ -633,15 +661,32 @@ export default {
   }
 
   .selected-frame, .selected {
-    border: 2px solid rgb(58, 58, 173);
+    border: 2px solid rgb(79, 79, 175);
     border-radius: 3px;
-    background-color: rgb(182, 182, 217);
+    background-color: rgb(203, 203, 223);
   }
 
   .semi-selected-frame {
     background-color: rgb(182, 182, 217);
     border-radius: 3px;
     border: 2px solid rgb(139, 139, 139);
+  }
+
+  .empty-selected-frame {
+    background-color: rgba(182, 182, 217, 0);
+    border-radius: 3px;
+    border: 2px solid rgb(58, 58, 173);
+  }
+  .empty-semi-selected-frame {
+    background-color: rgba(182, 182, 217, 0);
+    border-radius: 3px;
+    border: 2px solid rgb(133, 133, 214);
+  }
+
+  .empty-frame {
+    background-color: rgba(182, 182, 217, 0);
+    border-radius: 3px;
+    border: 2px solid grey;
   }
  
 </style>
