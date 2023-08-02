@@ -37,24 +37,24 @@
         </div>
       </div>
       <canvas ref="canvas" id="myCanvas" width="800" height="500"
-      @mousedown="handleMouseDown" @mouseup="handleMouseUp" @mousemove="handleMouseMove"></canvas>
+      @mousedown="handleMouseDown" @mouseup="handleMouseUp" @mouseleave="handleMouseUp" @mousemove="handleMouseMove"></canvas>
       <div class="tool-section tool-section-right">
         <div id="color-tools">
           <canvas ref="colorCanvas" id="color-canvas" width="300" height="100" @click="pickColorFromColorCanvas"></canvas>
         </div>
         <div id="onion-parameters" @mousemove="displayOnionLayers">
           <div class="onion-layer">
-            <input type="range" min="1" max="100" v-model="onionValue[0]" class="onion-slider">
+            <input type="range" min="1" max="20" v-model="onionValue[0]" class="onion-slider">
             <button v-if="onionLayerState[0] !== false" class="selected" @click="selectOnionLayer(0)"><img src="@/assets/onoin-3.png" alt="onion"></button>
             <button v-else @click="unselectOnionLayer(0)"><img src="@/assets/onoin-3.png" alt="onion"></button>
           </div>
           <div class="onion-layer">
-            <input type="range" min="1" max="100" v-model="onionValue[1]" class="onion-slider">
+            <input type="range" min="1" max="20" v-model="onionValue[1]" class="onion-slider">
             <button v-if="onionLayerState[1] !== false" class="selected" @click="selectOnionLayer(1)"><img src="@/assets/onoin-2.png" alt="onion"></button>
             <button v-else @click="unselectOnionLayer(1)"><img src="@/assets/onoin-2.png" alt="onion"></button>
           </div>
           <div class="onion-layer">
-            <input type="range" min="1" max="100" v-model="onionValue[2]" class="onion-slider">
+            <input type="range" min="1" max="20" v-model="onionValue[2]" class="onion-slider">
             <button v-if="onionLayerState[2] !== false" class="selected" @click="selectOnionLayer(2)"><img src="@/assets/onoin-1.png" alt="onion"></button>
             <button v-else @click="unselectOnionLayer(2)"><img src="@/assets/onoin-1.png" alt="onion"></button>
           </div>
@@ -64,17 +64,17 @@
             <button v-else @click="unselectOnionLayer(3)"><img src="@/assets/onion.png" alt="onion"></button>
           </div>
           <div class="onion-layer">
-            <input type="range" min="1" max="100" v-model="onionValue[4]" class="onion-slider">
+            <input type="range" min="1" max="20" v-model="onionValue[4]" class="onion-slider">
             <button v-if="onionLayerState[4] !== false" class="selected" @click="selectOnionLayer(4)"><img src="@/assets/onoin+1.png" alt="onion"></button>
             <button v-else @click="unselectOnionLayer(4)"><img src="@/assets/onoin+1.png" alt="onion"></button>
           </div>
           <div class="onion-layer">
-            <input type="range" min="1" max="100" v-model="onionValue[5]" class="onion-slider">
+            <input type="range" min="1" max="20" v-model="onionValue[5]" class="onion-slider">
             <button v-if="onionLayerState[5] !== false" class="selected" @click="selectOnionLayer(5)"><img src="@/assets/onoin+2.png" alt="onion"></button>
             <button v-else @click="unselectOnionLayer(5)"><img src="@/assets/onoin+2.png" alt="onion"></button>
           </div>
           <div class="onion-layer">
-            <input type="range" min="1" max="100" v-model="onionValue[6]" class="onion-slider">
+            <input type="range" min="1" max="20" v-model="onionValue[6]" class="onion-slider">
             <button v-if="onionLayerState[6] !== false" class="selected" @click="selectOnionLayer(6)"><img src="@/assets/onoin+3.png" alt="onion"></button>
             <button v-else @click="unselectOnionLayer(6)"><img src="@/assets/onoin+3.png" alt="onion"></button>
           </div>
@@ -111,34 +111,48 @@
             <div>{{ calk.name }}</div>
             <div class="layer-arrows">
               <button>
-                <img src="@/assets/arrow-up.png" alt="arrow-up">
+                <img @click="moveLayerTowardTop(calkIndex)" src="@/assets/arrow-up.png" alt="arrow-up">
               </button>
               <button>
-                <img src="@/assets/arrow-down.png" alt="arrow-down">
+                <img @click="moveLayerTowardBottom(calkIndex)" src="@/assets/arrow-down.png" alt="arrow-down">
               </button>
             </div>
-            <button v-if="calkIndex == selectedCalk">
+            <button @click="hideCalkLayer(calkIndex)" v-if="calkLayers[calkIndex].displayed == true">
               <img src="@/assets/open-eye.png" alt="open-eye">
             </button>
-            <button v-else>
+            <button @click="displayCalkLayer(calkIndex)" v-else>
               <img src="@/assets/closed-eye.png" alt="closed-eye">
+            </button>
+
+            <button @click="hideOnionLayer(calkIndex)" v-if="calkLayers[calkIndex].onion == true">
+              <img src="@/assets/onion.png" alt="onion">
+            </button>
+            <button @click="displayOnionLayer(calkIndex)" v-else>
+              <img src="@/assets/onion-cross.png" alt="onion">
             </button>
           </span>
           <span v-else class="layer-head">
             <div>{{ calk.name }}</div>
             <div class="layer-arrows">
               <button>
-                <img src="@/assets/arrow-up.png" alt="arrow-up">
+                <img @click="moveLayerTowardTop(calkIndex)" src="@/assets/arrow-up.png" alt="arrow-up">
               </button>
               <button>
-                <img src="@/assets/arrow-down.png" alt="arrow-down">
+                <img @click="moveLayerTowardBottom(calkIndex)" src="@/assets/arrow-down.png" alt="arrow-down">
               </button>
             </div>
-            <button v-if="calkIndex == selectedCalk">
+            <button @click="hideCalkLayer(calkIndex)" v-if="calkLayers[calkIndex].displayed == true">
               <img src="@/assets/open-eye.png" alt="open-eye">
             </button>
             <button v-else>
-              <img src="@/assets/closed-eye.png" alt="closed-eye">
+              <img @click="displayCalkLayer(calkIndex)" src="@/assets/closed-eye.png" alt="closed-eye">
+            </button>
+
+            <button @click="hideOnionLayer(calkIndex)" v-if="calkLayers[calkIndex].onion == true">
+              <img src="@/assets/onion.png" alt="onion">
+            </button>
+            <button @click="displayOnionLayer(calkIndex)" v-else>
+              <img src="@/assets/onion-cross.png" alt="onion">
             </button>
           </span>
           <span class="frame" v-for="(frame, index) in calk.code" :key="frame" @click="selectFrame(index)">
@@ -224,6 +238,35 @@ export default {
     this.drawColorCanvas();
   },
   methods: {
+
+    displayOnionLayer(calkIndex) {
+      this.calkLayers[calkIndex].onion = true;
+    },
+
+    hideOnionLayer(calkIndex) {
+      this.calkLayers[calkIndex].onion = false;
+    },
+
+    displayCalkLayer(calkIndex) {
+      this.calkLayers[calkIndex].displayed = true;
+    },
+
+    hideCalkLayer(calkIndex) {
+      this.calkLayers[calkIndex].displayed = false;
+    },
+
+    moveLayerTowardTop(calkIndex) {
+      if(calkIndex < this.calkLayers.length -1) {
+        [this.calkLayers[calkIndex], this.calkLayers[calkIndex + 1]] = [this.calkLayers[calkIndex + 1], this.calkLayers[calkIndex]];
+      }
+    },
+
+    moveLayerTowardBottom(calkIndex) {
+      if(calkIndex > 0) {
+        [this.calkLayers[calkIndex - 1], this.calkLayers[calkIndex]] = [this.calkLayers[calkIndex], this.calkLayers[calkIndex - 1]];
+      }
+    },
+
     createNewLayer() {
       // Update the everCount
       this.calkLayersEverCount++;
@@ -365,7 +408,9 @@ export default {
         console.log(centerX + centerY);
         
         this.calkLayers.forEach((layer, index) => {
-          eval(this.returnLastDrawnedFrameFrom(index, this.displayedFrame));
+          if(layer.displayed) {
+            eval(this.returnLastDrawnedFrameFrom(index, this.displayedFrame));
+          }
         });
 
       } else {
@@ -381,33 +426,35 @@ export default {
       const originalFrame = this.displayedFrame;
 
       this.calkLayers.forEach((layer, index) => {
-        // Select the apropriate frame and draw the code
-        for(let i = 0; i < 3; i++) {
-          if(this.displayedFrame == 0) {
-            this.displayedFrame = this.calkLayers[this.selectedCalk].code.length -1;
-          } else {
-            this.displayedFrame--;
+        if(layer.displayed) {
+          // Select the apropriate frame and draw the code
+          for(let i = 0; i < 3; i++) {
+            if(this.displayedFrame == 0) {
+              this.displayedFrame = this.calkLayers[this.selectedCalk].code.length -1;
+            } else {
+              this.displayedFrame--;
+            }
           }
-        }
-
-        for(let i = 0; i < this.onionValue.length; i++) {
-          if (this.onionLayerState[i]) {
-            // Select the opacity on the onion layer
+          for(let i = 0; i < this.onionValue.length; i++) {
             ctx.globalAlpha = this.onionValue[i]/100;
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
             console.log(centerX + centerY);
-            //eval(this.calkLayers[index][this.displayedFrame].code);
-            eval(this.returnLastDrawnedFrameFrom(index, this.displayedFrame));
+            if (this.onionLayerState[i] && layer.onion) {
+              eval(this.returnLastDrawnedFrameFrom(index, this.displayedFrame));
+            } else if (layer.onion === false && this.onionLayerState[i] && i == 3 ) {
+              
+              eval(this.returnLastDrawnedFrameFrom(index, this.displayedFrame));
+            }
+            // Go back to the selected frame
+            if(this.displayedFrame >= this.calkLayers[this.selectedCalk].code.length -1) {
+              this.displayedFrame = 0;
+            } else {
+              this.displayedFrame++;
+            }
           }
-          // Go back to the selected frame
-          if(this.displayedFrame >= this.calkLayers[this.selectedCalk].code.length -1) {
-            this.displayedFrame = 0;
-          } else {
-            this.displayedFrame++;
-          }
+          this.displayedFrame = originalFrame;
         }
-        this.displayedFrame = originalFrame;
       });
       // Put back to opcatity of the main frame
       ctx.globalAlpha = this.onionValue[3]/100;
@@ -429,12 +476,16 @@ export default {
     },
 
     draw(event) {
-      if(this.penDown) {
+      if(this.penDown && this.calkLayers[this.selectedCalk].displayed) {
         const mouseX = event.clientX-this.canvasData.left;
         const mouseY = event.clientY-this.canvasData.top;
 
+        // If the frame we are about to draw onto is empty, copy the code from the last frawing onto it
+        if(this.calkLayers[this.selectedCalk].code[this.displayedFrame] == "") {
+          this.calkLayers[this.selectedCalk].code[this.displayedFrame] = this.returnLastDrawnedFrameFrom(this.selectedCalk, this.displayedFrame)
+        }
+
         if (this.drawingToolsData.currentTool === this.toolsMetaData.crayon) {
-          //ctx.globalAlpha = "${this.drawingToolsData.currentOpacity/100}";
           const newStroke = `
             ctx.fillStyle = "${this.drawingToolsData.currentColor}";
             ctx.strokeStyle = "${this.drawingToolsData.currentColor}";
@@ -456,7 +507,6 @@ export default {
             let x = (rawX * Math.cos(rawY * (Math.PI*3))) * this.drawingToolsData.currentSize;
             let y = (rawY * Math.cos(rawX * (Math.PI*3))) * this.drawingToolsData.currentSize;
 
-            //ctx.globalAlpha = "${this.drawingToolsData.currentOpacity/100}";
             const newStroke =
             `
               ctx.fillStyle = "${this.drawingToolsData.currentColor}";
