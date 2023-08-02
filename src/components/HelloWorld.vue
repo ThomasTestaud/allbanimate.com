@@ -89,22 +89,26 @@
     </div>
     <div id="frame-parameters">
       <span>
-        <label for="frame-rate">Frame rate: </label>
-        <input type="number" id="frame-rate" v-model="frameRate" @keyup="updateFrameRate" @click="updateFrameRate">
-        /s
+        <button @click="createNewLayer">Create new layer</button>
+        <button @click="deleteSelectedLayer">Delete selected layer</button>
       </span>
       <span>
         <button @click="createNewFrame">Create new frame</button>
         <button @click="duplicateSelectedFrame">Duplicate selected frame</button>
         <button @click="deleteSelectedFrame">Delete selected frame</button>
       </span>
+      <span>
+        <label for="frame-rate">Frame rate: </label>
+        <input type="number" id="frame-rate" v-model="frameRate" @keyup="updateFrameRate" @click="updateFrameRate">
+        /s
+      </span>
     </div>
     <div id="lower-section">
 
       <div id="timeline" @click="readCurrentFrame">
-        <div v-for="(frames, calkIndex) in calkLayers2" :key="frames" class="layer" @click="selectedCalk = calkIndex">
+        <div v-for="(calk, calkIndex) in calkLayers" :key="calk" class="layer" @click="selectedCalk = calkIndex">
           <span v-if="calkIndex == selectedCalk" class="layer-head layer-head-selected">
-            <div>Layer {{ calkIndex + 1}}</div>
+            <div>{{ calk.name }}</div>
             <div class="layer-arrows">
               <button>
                 <img src="@/assets/arrow-up.png" alt="arrow-up">
@@ -121,7 +125,7 @@
             </button>
           </span>
           <span v-else class="layer-head">
-            <div>Layer {{ calkIndex + 1}}</div>
+            <div>{{ calk.name }}</div>
             <div class="layer-arrows">
               <button>
                 <img src="@/assets/arrow-up.png" alt="arrow-up">
@@ -137,12 +141,12 @@
               <img src="@/assets/closed-eye.png" alt="closed-eye">
             </button>
           </span>
-          <span class="frame" v-for="(frame, index) in frames.code" :key="frame" @click="selectFrame(index)">
+          <span class="frame" v-for="(frame, index) in calk.code" :key="frame" @click="selectFrame(index)">
             <button v-if="index == displayedFrame && calkIndex == selectedCalk && frame === ''" class="empty-selected-frame"></button>
             <button v-else-if="index == displayedFrame && calkIndex == selectedCalk && frame !== ''" class="selected-frame"></button>
             <button v-else-if="index == displayedFrame && calkIndex !== selectedCalk && frame === ''" class="empty-semi-selected-frame"></button>
             <button v-else-if="index == displayedFrame && calkIndex !== selectedCalk && frame !== ''" class="semi-selected-frame"></button>
-            <button v-else-if="frame.code === ''" class="empty-frame"></button>
+            <button v-else-if="frame === ''" class="empty-frame"></button>
             <button v-else></button>
           </span>
         </div>
@@ -161,36 +165,6 @@ export default {
   data() {
     return {
       calkLayers: [
-        [
-          {code: ""},
-          {code: ""},
-          {code: ""},
-          {code: ""},
-          {code: ""},
-          {code: ""},
-          {code: ""},
-        ],
-        [
-          {code: ""},
-          {code: ""},
-          {code: ""},
-          {code: ""},
-          {code: ""},
-          {code: ""},
-          {code: ""},
-        ],
-        [
-          {code: ""},
-          {code: ""},
-          {code: ""},
-          {code: ""},
-          {code: ""},
-          {code: ""},
-          {code: ""},
-        ],
-      ],
-      
-      calkLayers2: [
           {
             code: ["", "", "", ""],
             displayed: true,
@@ -201,22 +175,10 @@ export default {
             code: ["", "", "", ""],
             displayed: true,
             onion: true,
-            name: "Layer 1",
-          },
-          {
-            code: ["", "", "", ""],
-            displayed: true,
-            onion: true,
-            name: "Layer 1",
-          },
-          {
-            code: ["", "", "", ""],
-            displayed: true,
-            onion: true,
-            name: "Layer 1",
+            name: "Layer 2",
           },
       ],
-      
+      calkLayersEverCount: 4,
       frameRate: 6,
       drawingToolsData: {
         currentTool: false,
@@ -262,13 +224,36 @@ export default {
     this.drawColorCanvas();
   },
   methods: {
+    createNewLayer() {
+      // Update the everCount
+      this.calkLayersEverCount++;
+      // Initiate the frames array to match to project's current amount of frames
+      const framesArray = [];
+      this.calkLayers[0].code.forEach(() => {
+        framesArray.push("");
+      });
+      // Write and push the new layer
+      this.calkLayers.push(
+        {
+          code: framesArray,
+          displayed: true,
+          onion: true,
+          name: "Layer " + this.calkLayersEverCount,
+        },
+      );
+    },
+
+    deleteSelectedLayer() {
+      this.calkLayers.splice(this.selectedCalk, 1);
+    },
+
     blackCanvas() {
-      this.calkLayers[this.selectedCalk][this.displayedFrame].code = "/**/";
+      this.calkLayers[this.selectedCalk].code[this.displayedFrame] = "/**/";
       this.readCurrentFrame();
     },
 
     emptyCanvas() {
-      this.calkLayers[this.selectedCalk][this.displayedFrame].code = "";
+      this.calkLayers[this.selectedCalk].code[this.displayedFrame] = "";
       this.readCurrentFrame();
     },
     
@@ -289,9 +274,9 @@ export default {
     deleteSelectedFrame() {
       //this.calkLayers[this.selectedCalk].splice(this.displayedFrame, 1);
       this.calkLayers.forEach((layer) => {
-        layer.splice(this.displayedFrame, 1);
+        layer.code.splice(this.displayedFrame, 1);
       });
-      if(this.displayedFrame == this.calkLayers[this.selectedCalk].length) {
+      if(this.displayedFrame == this.calkLayers[this.selectedCalk].code.length) {
         this.displayedFrame--;
       }
       this.readCurrentFrame();
@@ -306,14 +291,14 @@ export default {
 
     createNewFrame() {
       this.calkLayers.forEach((layer) => {
-        layer.push({code: ""},);
+        layer.code.push("");
       });
     },
 
     duplicateSelectedFrame() {
       //this.calkLayers[this.selectedCalk].push(this.calkLayers[this.selectedCalk][this.displayedFrame]);
       this.calkLayers.forEach((layer) => {
-        layer.push(layer[this.displayedFrame]);
+        layer.code.push(layer.code[this.displayedFrame]);
       });
     },
 
@@ -323,7 +308,7 @@ export default {
 
  
     nextFrame() {
-      if(this.displayedFrame >= this.calkLayers[this.selectedCalk].length -1) {
+      if(this.displayedFrame >= this.calkLayers[this.selectedCalk].code.length -1) {
         this.displayedFrame = 0;
       } else {
         this.displayedFrame++;
@@ -333,7 +318,7 @@ export default {
 
     previousFrame() {
       if(this.displayedFrame == 0) {
-        this.displayedFrame = this.calkLayers[this.selectedCalk].length -1;
+        this.displayedFrame = this.calkLayers[this.selectedCalk].code.length -1;
       } else {
         this.displayedFrame--;
       }
@@ -360,11 +345,11 @@ export default {
     },
 
     returnLastDrawnedFrameFrom(layer, frame) {
-      if(this.calkLayers[layer][frame].code !== "") {
-        return this.calkLayers[layer][frame].code;
+      if(this.calkLayers[layer].code[frame] !== "") {
+        return this.calkLayers[layer].code[frame];
       }
       if(frame === 0) {
-        return this.calkLayers[layer][frame].code;
+        return this.calkLayers[layer].code[frame];
       }
       return this.returnLastDrawnedFrameFrom(layer, frame-1);
     },
@@ -399,7 +384,7 @@ export default {
         // Select the apropriate frame and draw the code
         for(let i = 0; i < 3; i++) {
           if(this.displayedFrame == 0) {
-            this.displayedFrame = this.calkLayers[this.selectedCalk].length -1;
+            this.displayedFrame = this.calkLayers[this.selectedCalk].code.length -1;
           } else {
             this.displayedFrame--;
           }
@@ -416,7 +401,7 @@ export default {
             eval(this.returnLastDrawnedFrameFrom(index, this.displayedFrame));
           }
           // Go back to the selected frame
-          if(this.displayedFrame >= this.calkLayers[this.selectedCalk].length -1) {
+          if(this.displayedFrame >= this.calkLayers[this.selectedCalk].code.length -1) {
             this.displayedFrame = 0;
           } else {
             this.displayedFrame++;
@@ -459,7 +444,7 @@ export default {
             ctx.closePath();
             `;
 
-          this.calkLayers[this.selectedCalk][this.displayedFrame].code += newStroke;
+          this.calkLayers[this.selectedCalk].code[this.displayedFrame] += newStroke;
           this.readNewStroke(newStroke);
 
         } else if (this.drawingToolsData.currentTool === this.toolsMetaData.spray) {
@@ -482,7 +467,7 @@ export default {
               ctx.closePath();
               `;
             
-              this.calkLayers[this.selectedCalk][this.displayedFrame].code += newStroke;
+              this.calkLayers[this.selectedCalk].code[this.displayedFrame] += newStroke;
               this.readNewStroke(newStroke);
           }
         }
@@ -684,7 +669,9 @@ export default {
   }
 
   #frame-parameters {
-    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
   #frame-parameters input {
@@ -696,7 +683,7 @@ export default {
   }
 
   #frame-parameters span {
-    margin-right: 1rem;
+    margin-right: 0rem;
   }
 
   #frame-parameters button {
