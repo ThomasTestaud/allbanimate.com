@@ -102,7 +102,7 @@
     <div id="lower-section">
 
       <div id="timeline" @click="readCurrentFrame">
-        <div v-for="(frames, calkIndex) in calkLayers" :key="frames" class="layer" @click="selectedCalk = calkIndex">
+        <div v-for="(frames, calkIndex) in calkLayers2" :key="frames" class="layer" @click="selectedCalk = calkIndex">
           <span v-if="calkIndex == selectedCalk" class="layer-head layer-head-selected">
             <div>Layer {{ calkIndex + 1}}</div>
             <div class="layer-arrows">
@@ -137,11 +137,11 @@
               <img src="@/assets/closed-eye.png" alt="closed-eye">
             </button>
           </span>
-          <span class="frame" v-for="(frame, index) in frames" :key="frame.code" @click="selectFrame(index)">
-            <button v-if="index == displayedFrame && calkIndex == selectedCalk && frame.code === ''" class="empty-selected-frame"></button>
-            <button v-else-if="index == displayedFrame && calkIndex == selectedCalk && frame.code !== ''" class="selected-frame"></button>
-            <button v-else-if="index == displayedFrame && calkIndex !== selectedCalk && frame.code === ''" class="empty-semi-selected-frame"></button>
-            <button v-else-if="index == displayedFrame && calkIndex !== selectedCalk && frame.code !== ''" class="semi-selected-frame"></button>
+          <span class="frame" v-for="(frame, index) in frames.code" :key="frame" @click="selectFrame(index)">
+            <button v-if="index == displayedFrame && calkIndex == selectedCalk && frame === ''" class="empty-selected-frame"></button>
+            <button v-else-if="index == displayedFrame && calkIndex == selectedCalk && frame !== ''" class="selected-frame"></button>
+            <button v-else-if="index == displayedFrame && calkIndex !== selectedCalk && frame === ''" class="empty-semi-selected-frame"></button>
+            <button v-else-if="index == displayedFrame && calkIndex !== selectedCalk && frame !== ''" class="semi-selected-frame"></button>
             <button v-else-if="frame.code === ''" class="empty-frame"></button>
             <button v-else></button>
           </span>
@@ -189,6 +189,34 @@ export default {
           {code: ""},
         ],
       ],
+      
+      calkLayers2: [
+          {
+            code: ["", "", "", ""],
+            displayed: true,
+            onion: true,
+            name: "Layer 1",
+          },
+          {
+            code: ["", "", "", ""],
+            displayed: true,
+            onion: true,
+            name: "Layer 1",
+          },
+          {
+            code: ["", "", "", ""],
+            displayed: true,
+            onion: true,
+            name: "Layer 1",
+          },
+          {
+            code: ["", "", "", ""],
+            displayed: true,
+            onion: true,
+            name: "Layer 1",
+          },
+      ],
+      
       frameRate: 6,
       drawingToolsData: {
         currentTool: false,
