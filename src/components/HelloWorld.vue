@@ -41,6 +41,9 @@
       <div class="tool-section tool-section-right">
         <div id="color-tools">
           <canvas ref="colorCanvas" id="color-canvas" width="300" height="100" @click="pickColorFromColorCanvas"></canvas>
+          <div id="memory-palette">
+            <button v-for="(color, index) in memoryColorPalette" :key="index" :style="{ backgroundColor: color }" @click="console.log(color)"></button>
+          </div>
         </div>
         <div id="onion-parameters" @mousemove="displayOnionLayers">
           <div class="onion-layer">
@@ -203,6 +206,7 @@ export default {
         currentDensity: 40,
         currentRGB: [0, 0, 0],
       },
+      memoryColorPalette: ["black", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", ],
       displayedFrame: 0,
       selectedCalk: 0,
       interval: null,
@@ -540,6 +544,10 @@ export default {
       this.penDown = false;
     },
 
+    setColor(color) {
+      this.drawingToolsData.currentColor = color
+    },
+
     pickColorFromColorCanvas(event) {
       const canvas2 = this.$refs.colorCanvas;
       const ctx2 = canvas2.getContext('2d');
@@ -551,10 +559,13 @@ export default {
       let palette = ctx2.getImageData(x, y, 1, 1);
       
       // Enregistrement des valeurs RGB.
-      console.log(this.drawingToolsData.currentRGB);
+      //console.log(this.drawingToolsData.currentRGB);
       this.drawingToolsData.currentRGB[0] = palette.data[0];
       this.drawingToolsData.currentRGB[1] = palette.data[1];
       this.drawingToolsData.currentRGB[2] = palette.data[2];
+
+      this.memoryColorPalette.unshift( `rgba(${this.drawingToolsData.currentRGB[0]}, ${this.drawingToolsData.currentRGB[1]}, ${this.drawingToolsData.currentRGB[2]}, ${this.drawingToolsData.currentOpacity/100})`);
+      this.memoryColorPalette.pop();
     },
 
     drawColorCanvas() {
@@ -834,5 +845,21 @@ export default {
   .layer-arrows img {
     height: 100%;
     width: 1rem;
+  }
+
+  #memory-palette {
+    width: 300px;
+    margin: auto;
+    padding-left: 1px;
+    display: grid;
+    grid-template-columns: repeat(17, 1fr);
+    grid-gap: 2px;
+  }
+
+  #memory-palette button {
+    margin: 0px;
+    padding: 0px;
+    height: 15px;
+    width: 15px;
   }
 </style>
