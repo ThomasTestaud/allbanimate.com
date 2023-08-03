@@ -42,7 +42,7 @@
         <div id="color-tools">
           <canvas ref="colorCanvas" id="color-canvas" width="300" height="100" @click="pickColorFromColorCanvas"></canvas>
           <div id="memory-palette">
-            <button v-for="(color, index) in memoryColorPalette" :key="index" :style="{ backgroundColor: color }" @click="console.log(color)"></button>
+            <button v-for="(color, index) in memoryColorPalette" :key="index" :style="{ backgroundColor: color.string }" @click="setColor(color.rgb)"></button>
           </div>
         </div>
         <div id="onion-parameters" @mousemove="displayOnionLayers">
@@ -206,7 +206,7 @@ export default {
         currentDensity: 40,
         currentRGB: [0, 0, 0],
       },
-      memoryColorPalette: ["black", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", ],
+      memoryColorPalette: [{string:"white", rgb: [255,255,255]}, {string:"black", rgb: [0,0,0]},],
       displayedFrame: 0,
       selectedCalk: 0,
       interval: null,
@@ -288,6 +288,8 @@ export default {
           name: "Layer " + this.calkLayersEverCount,
         },
       );
+
+      this.selectedCalk = this.calkLayers.length-1;
     },
 
     deleteSelectedLayer() {
@@ -545,7 +547,9 @@ export default {
     },
 
     setColor(color) {
-      this.drawingToolsData.currentColor = color
+      this.drawingToolsData.currentRGB[0] = color[0];
+      this.drawingToolsData.currentRGB[1] = color[1];
+      this.drawingToolsData.currentRGB[2] = color[2];
     },
 
     pickColorFromColorCanvas(event) {
@@ -559,13 +563,20 @@ export default {
       let palette = ctx2.getImageData(x, y, 1, 1);
       
       // Enregistrement des valeurs RGB.
-      //console.log(this.drawingToolsData.currentRGB);
       this.drawingToolsData.currentRGB[0] = palette.data[0];
       this.drawingToolsData.currentRGB[1] = palette.data[1];
       this.drawingToolsData.currentRGB[2] = palette.data[2];
 
-      this.memoryColorPalette.unshift( `rgba(${this.drawingToolsData.currentRGB[0]}, ${this.drawingToolsData.currentRGB[1]}, ${this.drawingToolsData.currentRGB[2]}, ${this.drawingToolsData.currentOpacity/100})`);
-      this.memoryColorPalette.pop();
+      //this.drawingToolsData.currentColor = `rgba(${this.drawingToolsData.currentRGB[0]}, ${this.drawingToolsData.currentRGB[1]}, ${this.drawingToolsData.currentRGB[2]}, ${this.drawingToolsData.currentOpacity/100})`;
+
+      // Update memory palette
+      this.memoryColorPalette.unshift({
+        string:`rgba(${this.drawingToolsData.currentRGB[0]}, ${this.drawingToolsData.currentRGB[1]}, ${this.drawingToolsData.currentRGB[2]}, ${this.drawingToolsData.currentOpacity/100})`, 
+        rgb: [palette.data[0], palette.data[1], palette.data[2]]}
+      );
+      if (this.memoryColorPalette.length >= 52) {
+        this.memoryColorPalette.pop();
+      }
     },
 
     drawColorCanvas() {
