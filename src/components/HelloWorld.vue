@@ -30,13 +30,18 @@
           <button v-if="drawingToolsData.currentTool === toolsMetaData.three" class="selected"><img src="@/assets/dots.png" alt="dots"></button>
           <button v-else @click="selectTool(toolsMetaData.three)"><img src="@/assets/dots.png" alt="spray"></button>
 
-          <button v-if="drawingToolsData.currentTool === toolsMetaData.four" class="selected"><img src="@/assets/dots.png" alt="dots"></button>
-          <button v-else @click="selectTool(toolsMetaData.four)"><img src="@/assets/dots.png" alt="spray"></button>
-
+          
           <button><img src="@/assets/dots.png" alt="dots"></button>
           <button><img src="@/assets/dots.png" alt="dots"></button>
-          <button><img src="@/assets/eraser.png" alt="eraser"></button>
           <button><img src="@/assets/pipette.png" alt="pipette"></button>
+          
+          
+          <button v-if="drawingToolsData.currentTool === toolsMetaData.eraser" class="selected"><img src="@/assets/eraser.png" alt="eraser"></button>
+          <button v-else @click="selectTool(toolsMetaData.eraser)"><img src="@/assets/eraser.png" alt="spray"></button>
+          
+          <button v-if="drawingToolsData.currentTool === toolsMetaData.four" class="selected"><img src="@/assets/bucket.png" alt="bucket"></button>
+          <button v-else @click="selectTool(toolsMetaData.four)"><img src="@/assets/bucket.png" alt="spray"></button>
+
           <button @click="blackCanvas"><img src="@/assets/empty-canvas.png" alt="empty-canvas"></button>
           <button @click="emptyCanvas"><img src="@/assets/clearcanvas.png" alt="clearcanvas"></button>
         </div>
@@ -247,8 +252,13 @@ export default {
           particleSize: false,
           density: false,
         },
+        eraser: {
+          size: true,
+          opacity: false,
+          particleSize: false,
+          density: false,
+        },
       },
-      newStroke: "",
     };
   },
   mounted() {
@@ -501,8 +511,7 @@ export default {
 
     draw(event) {
       if(this.penDown && this.calkLayers[this.selectedCalk].displayed) {
-
-        //let newStroke;
+        
         const mouseX = event.clientX-this.canvasData.left;
         const mouseY = event.clientY-this.canvasData.top;
 
@@ -512,14 +521,17 @@ export default {
         }
 
         if (this.drawingToolsData.currentTool === this.toolsMetaData.crayon) {
-          this.newStroke += `
+          const newStroke = `
+            ctx.fillStyle = "${this.drawingToolsData.currentColor}";
+            ctx.strokeStyle = "${this.drawingToolsData.currentColor}";
             ctx.beginPath();
             ctx.arc(${mouseX}, ${mouseY}, ${this.drawingToolsData.currentSize}, 0, Math.PI * 2);
             ctx.fill();
             ctx.closePath();
             `;
 
-          this.calkLayers[this.selectedCalk].code[this.displayedFrame] += this.newStroke;
+          this.calkLayers[this.selectedCalk].code[this.displayedFrame] += newStroke;
+          this.readNewStroke(newStroke);
 
         } else if (this.drawingToolsData.currentTool === this.toolsMetaData.spray) {
 
@@ -530,29 +542,58 @@ export default {
             let x = (rawX * Math.cos(rawY * (Math.PI*3))) * this.drawingToolsData.currentSize;
             let y = (rawY * Math.cos(rawX * (Math.PI*3))) * this.drawingToolsData.currentSize;
 
-            this.newStroke +=
+            const newStroke =
             `
+              ctx.fillStyle = "${this.drawingToolsData.currentColor}";
+              ctx.strokeStyle = "${this.drawingToolsData.currentColor}";
               ctx.beginPath();
               ctx.arc(${mouseX + x}, ${mouseY + y}, ${(this.drawingToolsData.currentParticleSize/10)*(this.drawingToolsData.currentSize/2)}, 0, Math.PI * 2);
               ctx.fill();
               ctx.closePath();
               `;
             
-              this.calkLayers[this.selectedCalk].code[this.displayedFrame] += this.newStroke;
+              this.calkLayers[this.selectedCalk].code[this.displayedFrame] += newStroke;
+              this.readNewStroke(newStroke);
           }
         } else if (this.drawingToolsData.currentTool === this.toolsMetaData.three) {
 
-          this.newStroke += `
+          const newStroke = `
+            ctx.fillStyle = "${this.drawingToolsData.currentColor}";
+            ctx.strokeStyle = "${this.drawingToolsData.currentColor}";
             ctx.beginPath();
-            ctx.arc(${mouseX}, ${mouseY}, ${this.drawingToolsData.currentSize}, 0, Math.PI * 2);
+            ctx.arc(${mouseX}, ${mouseY}, ${this.drawingToolsData.currentSize/2}, 0, Math.PI * 2);
+            ctx.fillStyle = "rgba(${this.drawingToolsData.currentRGB}, ${this.drawingToolsData.currentOpacity/200})";
+            ctx.fill();
+            ctx.arc(${mouseX - this.drawingToolsData.currentSize/(1+Math.random()*2)}, ${mouseY - this.drawingToolsData.currentSize/(1+Math.random()*1.5)}, ${this.drawingToolsData.currentSize/1.5}, 0, Math.PI * 2);
+            ctx.arc(${mouseX + this.drawingToolsData.currentSize/(1+Math.random()*2)}, ${mouseY - this.drawingToolsData.currentSize/(1+Math.random()*1.5)}, ${this.drawingToolsData.currentSize/1.5}, 0, Math.PI * 2);
+            ctx.arc(${mouseX + this.drawingToolsData.currentSize/(1+Math.random()*3)}, ${mouseY + this.drawingToolsData.currentSize/(1+Math.random()*1.5)}, ${this.drawingToolsData.currentSize/2.5}, 0, Math.PI * 2);
+            ctx.arc(${mouseX - this.drawingToolsData.currentSize/(1+Math.random()*3)}, ${mouseY + this.drawingToolsData.currentSize/(1+Math.random()*2.5)}, ${this.drawingToolsData.currentSize/2.5}, 0, Math.PI * 2);
             ctx.fill();
             ctx.closePath();
             `;
 
-          this.calkLayers[this.selectedCalk].code[this.displayedFrame] += this.newStroke;
+          this.calkLayers[this.selectedCalk].code[this.displayedFrame] += newStroke;
+          this.readNewStroke(newStroke);
+
+        } else if (this.drawingToolsData.currentTool === this.toolsMetaData.four) {
+
+          const newStroke = `
+            ctx.fillStyle = "${this.drawingToolsData.currentColor}";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            `;
+
+          this.calkLayers[this.selectedCalk].code[this.displayedFrame] += newStroke;
+          this.readNewStroke(newStroke);
+
+        } else if (this.drawingToolsData.currentTool === this.toolsMetaData.eraser) {
+
+          const newStroke = `
+            ctx.clearRect(${mouseX} - ${this.drawingToolsData.currentSize}, ${mouseY} - ${this.drawingToolsData.currentSize}, ${this.drawingToolsData.currentSize} * 2, ${this.drawingToolsData.currentSize} * 2);
+            `;
+
+          this.calkLayers[this.selectedCalk].code[this.displayedFrame] += newStroke;
+          this.readNewStroke(newStroke);
         }
-        this.readNewStroke(this.newStroke);
-        this.newStroke = "";
       }
     },
 
@@ -561,10 +602,6 @@ export default {
       this.drawingToolsData.currentColor = `rgba(${this.drawingToolsData.currentRGB[0]}, ${this.drawingToolsData.currentRGB[1]}, ${this.drawingToolsData.currentRGB[2]}, ${this.drawingToolsData.currentOpacity/100})`; 
       this.canvasData = this.canvas.getBoundingClientRect();
       this.penDown = true;
-      this.newStroke = `
-        ctx.fillStyle = "${this.drawingToolsData.currentColor}";
-        ctx.strokeStyle = "${this.drawingToolsData.currentColor}";
-      `;
       this.handleMouseMove(event);
     },
 
@@ -601,7 +638,7 @@ export default {
 
       // Update memory palette
       this.memoryColorPalette.unshift({
-        string:`rgba(${this.drawingToolsData.currentRGB[0]}, ${this.drawingToolsData.currentRGB[1]}, ${this.drawingToolsData.currentRGB[2]}, ${this.drawingToolsData.currentOpacity/100})`, 
+        string:`rgb(${this.drawingToolsData.currentRGB[0]}, ${this.drawingToolsData.currentRGB[1]}, ${this.drawingToolsData.currentRGB[2]})`, 
         rgb: [palette.data[0], palette.data[1], palette.data[2]]}
       );
       if (this.memoryColorPalette.length >= 52) {
