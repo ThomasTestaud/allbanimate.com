@@ -22,16 +22,18 @@
           </div>
         </div>
         <div class="tool-section-left">
-          <button v-if="drawingToolsData.currentTool === toolsMetaData.crayon" class="selected"><img src="@/assets/crayon.png" alt="crayon"></button>
-          <button v-else @click="selectTool(toolsMetaData.crayon)"><img src="@/assets/crayon.png" alt="crayon"></button>
+          <button v-if="drawingToolsData.currentTool === toolsMetaData.crayon" class="selected"><img src="@/assets/sharpy.png" alt="crayon"></button>
+          <button v-else @click="selectTool(toolsMetaData.crayon)"><img src="@/assets/sharpy.png" alt="crayon"></button>
+
           <button v-if="drawingToolsData.currentTool === toolsMetaData.spray" class="selected"><img src="@/assets/spray.png" alt="spray"></button>
           <button v-else @click="selectTool(toolsMetaData.spray)"><img src="@/assets/spray.png" alt="spray"></button>
           
-          <button v-if="drawingToolsData.currentTool === toolsMetaData.three" class="selected"><img src="@/assets/dots.png" alt="dots"></button>
-          <button v-else @click="selectTool(toolsMetaData.three)"><img src="@/assets/dots.png" alt="spray"></button>
+          <button v-if="drawingToolsData.currentTool === toolsMetaData.three" class="selected"><img src="@/assets/crayon.png" alt="dots"></button>
+          <button v-else @click="selectTool(toolsMetaData.three)"><img src="@/assets/crayon.png" alt="spray"></button>
 
-          
-          <button><img src="@/assets/dots.png" alt="dots"></button>
+          <button v-if="drawingToolsData.currentTool === toolsMetaData.scissors" class="selected"><img src="@/assets/scissors.png" alt="dots"></button>
+          <button v-else @click="selectTool(toolsMetaData.scissors)"><img src="@/assets/scissors.png" alt="spray"></button>
+
           <button><img src="@/assets/dots.png" alt="dots"></button>
           <button><img src="@/assets/pipette.png" alt="pipette"></button>
           
@@ -257,6 +259,12 @@ export default {
           opacity: false,
           particleSize: false,
           density: false,
+        },
+        scissors: {
+          size: true,
+          opacity: true,
+          particleSize: true,
+          density: true,
         },
       },
     };
@@ -535,7 +543,7 @@ export default {
 
         } else if (this.drawingToolsData.currentTool === this.toolsMetaData.spray) {
 
-          for(let i = 0; i < this.drawingToolsData.currentDensity; i++) {
+          for(let i = 0; i < this.drawingToolsData.currentDensity/10; i++) {
 
             let rawX = Math.random() * 2 - 1;
             let rawY = Math.random() * 2 - 1;
@@ -557,6 +565,26 @@ export default {
           }
         } else if (this.drawingToolsData.currentTool === this.toolsMetaData.three) {
 
+          const newStroke = `
+            ctx.fillStyle = "${this.drawingToolsData.currentColor}";
+            ctx.strokeStyle = "${this.drawingToolsData.currentColor}";
+            ctx.beginPath();
+            ctx.arc(${mouseX}, ${mouseY}, ${this.drawingToolsData.currentSize/2}, 0, Math.PI * 2);
+            ctx.fillStyle = "rgba(${this.drawingToolsData.currentRGB}, ${this.drawingToolsData.currentOpacity/200})";
+            ctx.fill();
+            ctx.arc(${mouseX - this.drawingToolsData.currentSize/(1+Math.random()*2)}, ${mouseY - this.drawingToolsData.currentSize/(1+Math.random()*1.5)}, ${this.drawingToolsData.currentSize/1.5}, 0, Math.PI * 2);
+            ctx.arc(${mouseX + this.drawingToolsData.currentSize/(1+Math.random()*2)}, ${mouseY - this.drawingToolsData.currentSize/(1+Math.random()*1.5)}, ${this.drawingToolsData.currentSize/1.5}, 0, Math.PI * 2);
+            ctx.arc(${mouseX + this.drawingToolsData.currentSize/(1+Math.random()*3)}, ${mouseY + this.drawingToolsData.currentSize/(1+Math.random()*1.5)}, ${this.drawingToolsData.currentSize/2.5}, 0, Math.PI * 2);
+            ctx.arc(${mouseX - this.drawingToolsData.currentSize/(1+Math.random()*3)}, ${mouseY + this.drawingToolsData.currentSize/(1+Math.random()*2.5)}, ${this.drawingToolsData.currentSize/2.5}, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.closePath();
+            `;
+
+          this.calkLayers[this.selectedCalk].code[this.displayedFrame] += newStroke;
+          this.readNewStroke(newStroke);
+
+        } else if (this.drawingToolsData.currentTool === this.toolsMetaData.scissors) {
+          
           const newStroke = `
             ctx.fillStyle = "${this.drawingToolsData.currentColor}";
             ctx.strokeStyle = "${this.drawingToolsData.currentColor}";
