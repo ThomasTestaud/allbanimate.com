@@ -106,6 +106,8 @@
       <span>
         <button @click="createNewLayer">Create new layer</button>
         <button @click="deleteSelectedLayer">Delete selected layer</button>
+        <button v-if="renamingLayer" @click="renameLayerFalse" class="selected">Rename layer</button>
+        <button v-else @click="renameLayerTrue">Rename layer</button>
       </span>
       <span>
         <button @click="createNewFrame">Create new frame</button>
@@ -123,7 +125,10 @@
       <div id="timeline" @click="readCurrentFrame">
         <div v-for="(calk, calkIndex) in calkLayers" :key="calk" class="layer" @click="selectedCalk = calkIndex">
           <span v-if="calkIndex == selectedCalk" class="layer-head layer-head-selected">
-            <div>{{ calk.name }}</div>
+            <div class="layer-name" v-if="renamingLayer">
+              <input type="text" v-model="calk.name">  
+            </div>
+            <div class="layer-name" v-else>{{ calk.name }}</div>
             <div class="layer-arrows">
               <button>
                 <img @click="moveLayerTowardTop(calkIndex)" src="@/assets/arrow-up.png" alt="arrow-up">
@@ -147,7 +152,7 @@
             </button>
           </span>
           <span v-else class="layer-head">
-            <div>{{ calk.name }}</div>
+            <div class="layer-name">{{ calk.name }}</div>
             <div class="layer-arrows">
               <button>
                 <img @click="moveLayerTowardTop(calkIndex)" src="@/assets/arrow-up.png" alt="arrow-up">
@@ -179,7 +184,6 @@
             <button v-else></button>
           </span>
         </div>
-        
       </div>
     </div>
   </div>
@@ -227,6 +231,7 @@ export default {
       lineWidth: 10,
       penDown: false,
       videoBeingPlayed: false,
+      renamingLayer: false,
       onionValue: [1, 5, 10, 100, 10, 5, 1],
       onionLayerState: [true, true, true, true, false, false, false],
       toolsMetaData: {
@@ -263,8 +268,8 @@ export default {
         scissors: {
           size: true,
           opacity: true,
-          particleSize: true,
-          density: true,
+          particleSize: false,
+          density: false,
         },
       },
     };
@@ -278,6 +283,14 @@ export default {
     this.drawColorCanvas();
   },
   methods: {
+
+    renameLayerTrue() {
+      this.renamingLayer = true;
+    },
+
+    renameLayerFalse() {
+      this.renamingLayer = false;
+    },
 
     displayOnionLayer(calkIndex) {
       this.calkLayers[calkIndex].onion = true;
@@ -566,12 +579,9 @@ export default {
         } else if (this.drawingToolsData.currentTool === this.toolsMetaData.three) {
 
           const newStroke = `
-            ctx.fillStyle = "${this.drawingToolsData.currentColor}";
-            ctx.strokeStyle = "${this.drawingToolsData.currentColor}";
+            ctx.fillStyle = "rgba(${this.drawingToolsData.currentRGB}, ${this.drawingToolsData.currentOpacity/200})";
             ctx.beginPath();
             ctx.arc(${mouseX}, ${mouseY}, ${this.drawingToolsData.currentSize/2}, 0, Math.PI * 2);
-            ctx.fillStyle = "rgba(${this.drawingToolsData.currentRGB}, ${this.drawingToolsData.currentOpacity/200})";
-            ctx.fill();
             ctx.arc(${mouseX - this.drawingToolsData.currentSize/(1+Math.random()*2)}, ${mouseY - this.drawingToolsData.currentSize/(1+Math.random()*1.5)}, ${this.drawingToolsData.currentSize/1.5}, 0, Math.PI * 2);
             ctx.arc(${mouseX + this.drawingToolsData.currentSize/(1+Math.random()*2)}, ${mouseY - this.drawingToolsData.currentSize/(1+Math.random()*1.5)}, ${this.drawingToolsData.currentSize/1.5}, 0, Math.PI * 2);
             ctx.arc(${mouseX + this.drawingToolsData.currentSize/(1+Math.random()*3)}, ${mouseY + this.drawingToolsData.currentSize/(1+Math.random()*1.5)}, ${this.drawingToolsData.currentSize/2.5}, 0, Math.PI * 2);
@@ -586,16 +596,37 @@ export default {
         } else if (this.drawingToolsData.currentTool === this.toolsMetaData.scissors) {
           
           const newStroke = `
-            ctx.fillStyle = "${this.drawingToolsData.currentColor}";
-            ctx.strokeStyle = "${this.drawingToolsData.currentColor}";
+            ctx.fillStyle = "rgba(${this.drawingToolsData.currentRGB}, ${this.drawingToolsData.currentOpacity/1000})";
+            ctx.beginPath();
+            ctx.arc(${mouseX}, ${mouseY}, ${this.drawingToolsData.currentSize/4.5}, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.closePath();
+            ctx.beginPath();
+            ctx.arc(${mouseX}, ${mouseY}, ${this.drawingToolsData.currentSize/4}, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.closePath();
+            ctx.beginPath();
+            ctx.arc(${mouseX}, ${mouseY}, ${this.drawingToolsData.currentSize/3.5}, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.closePath();
+            ctx.beginPath();
+            ctx.arc(${mouseX}, ${mouseY}, ${this.drawingToolsData.currentSize/3}, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.closePath();
+            ctx.beginPath();
+            ctx.arc(${mouseX}, ${mouseY}, ${this.drawingToolsData.currentSiz/2.5}, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.closePath();
             ctx.beginPath();
             ctx.arc(${mouseX}, ${mouseY}, ${this.drawingToolsData.currentSize/2}, 0, Math.PI * 2);
-            ctx.fillStyle = "rgba(${this.drawingToolsData.currentRGB}, ${this.drawingToolsData.currentOpacity/200})";
             ctx.fill();
-            ctx.arc(${mouseX - this.drawingToolsData.currentSize/(1+Math.random()*2)}, ${mouseY - this.drawingToolsData.currentSize/(1+Math.random()*1.5)}, ${this.drawingToolsData.currentSize/1.5}, 0, Math.PI * 2);
-            ctx.arc(${mouseX + this.drawingToolsData.currentSize/(1+Math.random()*2)}, ${mouseY - this.drawingToolsData.currentSize/(1+Math.random()*1.5)}, ${this.drawingToolsData.currentSize/1.5}, 0, Math.PI * 2);
-            ctx.arc(${mouseX + this.drawingToolsData.currentSize/(1+Math.random()*3)}, ${mouseY + this.drawingToolsData.currentSize/(1+Math.random()*1.5)}, ${this.drawingToolsData.currentSize/2.5}, 0, Math.PI * 2);
-            ctx.arc(${mouseX - this.drawingToolsData.currentSize/(1+Math.random()*3)}, ${mouseY + this.drawingToolsData.currentSize/(1+Math.random()*2.5)}, ${this.drawingToolsData.currentSize/2.5}, 0, Math.PI * 2);
+            ctx.closePath();
+            ctx.beginPath();
+            ctx.arc(${mouseX}, ${mouseY}, ${this.drawingToolsData.currentSize/1.5}, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.closePath();
+            ctx.beginPath();
+            ctx.arc(${mouseX}, ${mouseY}, ${this.drawingToolsData.currentSize}, 0, Math.PI * 2);
             ctx.fill();
             ctx.closePath();
             `;
@@ -918,6 +949,17 @@ export default {
     border-bottom: 1px dashed grey;
   }
 
+  .layer-name {
+    width: 90px;
+    overflow: hidden;
+    font-size: 12px;
+  }
+
+  .layer-name input {
+    font-size: 12px;
+    width: 80px;
+  }
+
   .layer-head {
     display: flex;
     align-items: center;
@@ -927,7 +969,7 @@ export default {
     border-radius: 3px;
     background-color: rgb(152, 152, 152);
     padding: 4px;
-    width: 150px;
+    /*width: 150px;*/
   }
 
   .layer-head-selected {
