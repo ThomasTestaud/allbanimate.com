@@ -1,19 +1,27 @@
   <template>
+    
       <projectComponent v-if="response instanceof Object" :projectData="response"/>
+
       <div v-if="response == true">We are fetching your project...</div>
+
       <div v-if="response == false">
-        <div @click="fetchProject">Project 1</div>
-        <div @click="fetchProject">Project 2</div>
+        <BtnDeconnexion/>
+        <h2 @click="fetchProject">Project 1</h2>
+        <h2 @click="fetchProject">Project 2</h2>
       </div>
+
   </template>
   
   <script>
-  import projectComponent from '../components/ProjectComponent.vue'
+  import projectComponent from '../components/ProjectComponent.vue';
+  import axios from 'axios';
+  import BtnDeconnexion from '../components/BtnDeconnexion.vue';
 
   export default {
     name: 'HomeComponent',
     components: {
-      projectComponent
+      projectComponent,
+      BtnDeconnexion
     }, 
     data() {
       return {
@@ -68,8 +76,30 @@
       adaptResponse(response) {
         this.response = response;
         console.log(typeof this.response);
-      }
-     
+      },
+
+      ajaxRequest() {
+        // Retrieve the JWT token from local storage
+        const token = localStorage.getItem('token');
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        };
+        axios.get(`http://localhost:3000/VueJS_projects/allbanimate.com/backend/index.php`, config) //DEV
+        //axios.get(`https://api-events-on-time.thomastestaud.com/index.php?route=list`, config) //PROD
+        .then(response => {
+          this.listData = response.data;
+          this.requestStatus = "No list has been found for this user..."
+        })
+        .catch(
+          
+          error => {
+          console.log(error);
+          this.$router.push({ path: `/connect/` });
+        });
+      },
+
     }
   }
   </script>

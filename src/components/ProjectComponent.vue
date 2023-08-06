@@ -201,23 +201,15 @@ export default {
   data() {
     return {
       calkLayers: this.projectData.calkLayers,
-      calkLayersEverCount: 4,
-      frameRate: 6,
-      drawingToolsData: {
-        currentTool: false,
-        currentColor: false,
-        currentSize: 10,
-        currentOpacity: 100,
-        currentParticleSize: 3,
-        currentDensity: 40,
-        currentRGB: [0, 0, 0],
-      },
-      memoryColorPalette: [{string:"white", rgb: [255,255,255]}, {string:"black", rgb: [0,0,0]},],
-      displayedFrame: 0,
-      selectedCalk: 0,
-      lineWidth: 10,
-      onionValue: [1, 5, 10, 100, 10, 5, 1],
-      onionLayerState: [false, true, true, true, false, false, false],
+      calkLayersEverCount: this.projectData.calkLayersEverCount,
+      frameRate: this.projectData.frameRate,
+      drawingToolsData: this.projectData.drawingToolsData,
+      memoryColorPalette: this.projectData.memoryColorPalette,
+      displayedFrame: this.projectData.displayedFrame,
+      selectedCalk: this.projectData.selectedCalk,
+      lineWidth: this.projectData.lineWidth,
+      onionValue: this.projectData.onionValue,
+      onionLayerState: this.projectData.onionLayerState,
       
       
       interval: null,

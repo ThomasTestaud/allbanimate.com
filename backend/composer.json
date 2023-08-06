@@ -1,0 +1,11 @@
+{
+    "name": "mac/api_event_on_time",
+    "autoload": {
+        "psr-4": {
+            "Mac\\ApiEventOnTime\\": "src/"
+        }
+    },
+    "require": {
+        "firebase/php-jwt": "^5.4"
+    }
+}
