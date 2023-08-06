@@ -10,13 +10,13 @@ const routes = [
         component: Home
     },
     {
-        path: '/gallerie',
-        name: 'Gallerie',
+        path: '/projects',
+        name: 'projects',
         component: Gallerie
     },
     {
-        path: '/about',
-        name: 'About',
+        path: '/connexion',
+        name: 'connexion',
         component: About
     }
 ];

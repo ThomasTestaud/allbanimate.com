@@ -192,25 +192,15 @@
 <script>
 
 export default {
-  name: 'HelloWorld',
+  name: 'projectComponent',
   components: {
+  },
+  props: {
+    projectData: Object,
   },
   data() {
     return {
-      calkLayers: [
-          {
-            code: ["", "", "", ""],
-            displayed: true,
-            onion: true,
-            name: "Layer 1",
-          },
-          {
-            code: ["", "", "", ""],
-            displayed: true,
-            onion: true,
-            name: "Layer 2",
-          },
-      ],
+      calkLayers: this.projectData.calkLayers,
       calkLayersEverCount: 4,
       frameRate: 6,
       drawingToolsData: {
@@ -225,15 +215,17 @@ export default {
       memoryColorPalette: [{string:"white", rgb: [255,255,255]}, {string:"black", rgb: [0,0,0]},],
       displayedFrame: 0,
       selectedCalk: 0,
+      lineWidth: 10,
+      onionValue: [1, 5, 10, 100, 10, 5, 1],
+      onionLayerState: [false, true, true, true, false, false, false],
+      
+      
       interval: null,
       canvas: null,
       canvasData: null,
-      lineWidth: 10,
       penDown: false,
       videoBeingPlayed: false,
       renamingLayer: false,
-      onionValue: [1, 5, 10, 100, 10, 5, 1],
-      onionLayerState: [true, true, true, true, false, false, false],
       toolsMetaData: {
         crayon: {
           size: true,
@@ -277,10 +269,12 @@ export default {
   mounted() {
     this.canvas = this.$refs.canvas;
     this.canvasData = this.canvas.getBoundingClientRect();
-    this.selectFrame(0);
+    //this.selectFrame(0);
     this.selectTool(this.toolsMetaData.crayon);
     this.drawingToolsData.currentColor = `rgba(0, 0, 0, ${this.drawingToolsData.currentOpacity/100})`;
     this.drawColorCanvas();
+
+    console.log(this.projectData.calkLayers);
   },
   methods: {
 
@@ -918,7 +912,7 @@ export default {
   }
 
   .semi-selected-frame {
-    background-color: rgb(182, 182, 217);
+    background-color: rgb(233, 233, 255);
     border-radius: 3px;
     border: 2px solid rgb(139, 139, 139);
   }

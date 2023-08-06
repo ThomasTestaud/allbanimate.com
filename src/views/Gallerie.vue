@@ -1,7 +1,5 @@
-<template>
-    
-      <h1>Decoration d'intérieur</h1>
-      
+  <template>
+      <h1>Your projects</h1>
   </template>
   
   <script>

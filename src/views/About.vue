@@ -1,5 +1,5 @@
 <template>
-    <h1>À propos</h1>
+    <h1>Connexion</h1>
 </template>
 
 <script>
