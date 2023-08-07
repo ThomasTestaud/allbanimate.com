@@ -1,7 +1,7 @@
 <template>
   <div>
+    <BtnSaveProject :projectData="{calkLayers,calkLayersEverCount,frameRate,drawingToolsData,memoryColorPalette,displayedFrame,selectedCalk,lineWidth,onionValue,onionLayerState,}"></BtnSaveProject>
     <div id="upper-section">
-      
       <div class="tool-section">
         <div id="tool-parameters">
           <div v-if="drawingToolsData.currentTool.size === true">
@@ -35,8 +35,7 @@
           <button v-else @click="selectTool(toolsMetaData.scissors)"><img src="@/assets/scissors.png" alt="spray"></button>
 
           <button><img src="@/assets/dots.png" alt="dots"></button>
-          <button><img src="@/assets/pipette.png" alt="pipette"></button>
-          
+          <button><img src="@/assets/dots.png" alt="dots"></button>
           
           <button v-if="drawingToolsData.currentTool === toolsMetaData.eraser" class="selected"><img src="@/assets/eraser.png" alt="eraser"></button>
           <button v-else @click="selectTool(toolsMetaData.eraser)"><img src="@/assets/eraser.png" alt="spray"></button>
@@ -191,9 +190,12 @@
 
 <script>
 
+import BtnSaveProject from '../components/BtnSaveProject.vue';
+
 export default {
   name: 'projectComponent',
   components: {
+    BtnSaveProject
   },
   props: {
     projectData: Object,
@@ -265,8 +267,6 @@ export default {
     this.selectTool(this.toolsMetaData.crayon);
     this.drawingToolsData.currentColor = `rgba(0, 0, 0, ${this.drawingToolsData.currentOpacity/100})`;
     this.drawColorCanvas();
-
-    console.log(this.projectData.calkLayers);
   },
   methods: {
 

@@ -1,0 +1,65 @@
+  <template>
+      
+      <div v-if="response == true">We are fetching your project...</div>
+      <projectComponent v-if="response instanceof Object" :projectData="response"/>
+
+  </template>
+  
+  <script>
+  import projectComponent from '../components/ProjectComponent.vue';
+  import axios from 'axios';
+  
+
+  export default {
+    name: 'HomeComponent',
+    components: {
+      projectComponent,
+    }, 
+
+    data() {
+      return {
+        response: false,
+      }
+    },
+
+    mounted() {
+      this.fetchProject();
+    },
+
+    methods: {
+
+      fetchProject() {
+
+        this.response = true;
+
+        // Retrieve the JWT token from local storage
+        const token = localStorage.getItem('token');
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        };
+        axios.get(`http://localhost:3000/VueJS_projects/allbanimate.com/backend/index.php?route=project&projectName=${this.$route.params.name}`, config) //DEV
+        //axios.get(`https://api-events-on-time.thomastestaud.com/index.php?route=list`, config) //PROD
+        .then(response => {
+
+          this.response = JSON.parse(response.data.data);
+          
+        })
+        .catch(
+          
+          error => {
+          console.log(error);
+          //this.$router.push({ path: `/connect/` });
+        });
+        
+      },
+
+    }
+  }
+  </script>
+  
+  <!-- Add "scoped" attribute to limit CSS to this component only -->
+  <style scoped>
+    
+  </style>

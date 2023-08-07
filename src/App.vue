@@ -1,11 +1,12 @@
 <template>
   
     <nav>
-      <router-link to="/">Home</router-link>
-      <router-link to="/projects">Projects</router-link>
-      <router-link to="/connexion">Connexion</router-link>
+      <router-link to="/my-projects">My projects</router-link>
+      <router-link to="/new-project">New project</router-link>
     </nav>
+
     <router-view></router-view>
+
 </template>
 
 <script>

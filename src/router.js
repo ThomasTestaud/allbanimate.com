@@ -1,13 +1,19 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Home from './views/Home.vue';
+import Project from './views/Project.vue';
 import ConnectView from './views/Connect.vue';
 import CreateUser from './views/CreateUser.vue';
+import NewProject from './views/NewProject.vue';
+import MyProjects from './views/MyProjects.vue';
 
 const routes = [
     {
-        path: '/',
-        name: 'Home',
-        component: Home
+        path: '/project/:name',
+        name: 'Project',
+        component: Project
+    },
+    {
+        path: '/my-projects',
+        component: MyProjects
     },
     {
         path: '/connect',
@@ -16,7 +22,11 @@ const routes = [
     {
         path: '/create-account',
         component: CreateUser
-    }
+    },
+    {
+        path: '/new-project',
+        component: NewProject
+    },
 ];
 
 const router = createRouter({

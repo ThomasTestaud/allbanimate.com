@@ -9,7 +9,6 @@ header("Access-Control-Allow-Origin: *");
 
 $authController = new Controllers\AuthorisationController();
 
-
 //ROUTER
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     // This is a preflight request
@@ -21,26 +20,18 @@ exit;
 
     switch ($_GET['route']) {
 
-        case 'event':
+        case 'create-project':
             $decoded = $authController->authenticate(); // Authenticate the user before processing the request
             $userId = $decoded->userId->id; // Extract userId
 
-            $controller = new Controllers\EventsController();
-            $controller->postNewEvent($userId);
-            break;
-
-        case 'graph':
-            $decoded = $authController->authenticate(); // Authenticate the user before processing the request
-            $userId = $decoded->userId->id; // Extract userId
-
-            $controller = new Controllers\GraphsController();
-            $controller->createNewGraph($userId);
+            $controller = new Controllers\ProjectsController();
+            $controller->createNewProject($userId);
         break;
 
         case 'connect':
             $controller = new Controllers\UsersController();
             $controller->connectUser();
-            break;
+        break;
 
         case 'user':
             $controller = new Controllers\UsersController();
@@ -51,44 +42,51 @@ exit;
 
     switch ($_GET['route']) {
 
-        case 'list':
+        case 'project-list':
             $decoded = $authController->authenticate(); // Authenticate the user before processing the request
 
+            $userId = $decoded->userId->id; // Extract userId
+
+            $controller = new Controllers\ProjectsController();
+            $controller->getAllProjectsFromUser($userId);
+        break;
+
+        case 'project':
+            $decoded = $authController->authenticate(); // Authenticate the user before processing the request
+            $userId = $decoded->userId->id; // Extract userId
+
+            $controller = new Controllers\ProjectsController();
+            $result = $controller->getProjectsFromNameAndUser($userId);
+        break;
+    }
+    
+} elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+
+    switch ($_GET['route']) {
+
+        case 'save-project':
+            $decoded = $authController->authenticate(); // Authenticate the user before processing the request
             $userId = $decoded->userId->id; // Extract userId
 
             $controller = new Controllers\GraphsController();
-            $result = $controller->getAllGraphsFromUser($userId);
-            break;
+            $controller->createNewGraph($userId);
+        break;
 
-        case 'graph':
-            $decoded = $authController->authenticate(); // Authenticate the user before processing the request
-            $userId = $decoded->userId->id; // Extract userId
-
-            $controller = new Controllers\EventsController();
-            $result = $controller->getEvents($userId, $_GET['graphId']);
-            break;
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
 
     switch ($_GET['route']) {
 
-        case 'event':
-            $decoded = $authController->authenticate(); // Authenticate the user before processing the request
-            $userId = $decoded->userId->id; // Extract userId
+        case 'project':
+            //$decoded = $authController->authenticate(); // Authenticate the user before processing the request
+            //$userId = $decoded->userId->id; // Extract userId
 
-            $controller = new Controllers\EventsController();
-            $controller->deleteLastEvent($userId);
-            break;
+            //$controller = new Controllers\EventsController();
+            //$controller->deleteLastEvent($userId);
+        break;
 
-        case 'graph':
-            $decoded = $authController->authenticate(); // Authenticate the user before processing the request
-            $userId = $decoded->userId->id; // Extract userId
-
-            $controller = new Controllers\GraphsController();
-            $controller->deleteGraph($userId);
-            break;
     }
-} else {
+}  else {
 
     $json = json_encode('else   ');
     echo ($json);
