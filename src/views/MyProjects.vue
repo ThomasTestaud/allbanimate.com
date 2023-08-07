@@ -1,6 +1,8 @@
   <template>
 
       <BtnDeconnexion/>
+      
+      <NewProject/>
 
       <div v-if="projectList.length > 0">
         <div v-for="project in projectList" @click="openProject(project.name)" :key="project">
@@ -18,11 +20,13 @@
   <script>
   import axios from 'axios';
   import BtnDeconnexion from '../components/BtnDeconnexion.vue';
+  import NewProject from '../components/PopUpNewProject.vue';
 
   export default {
     name: 'MyProjects',
     components: {
-      BtnDeconnexion
+      BtnDeconnexion,
+      NewProject
     }, 
     data() {
       return {

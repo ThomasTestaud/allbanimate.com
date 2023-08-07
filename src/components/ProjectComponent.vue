@@ -1,6 +1,8 @@
 <template>
-  <div>
+  <div class="parameter-bar">
+    <router-link to="/my-projects">My projects</router-link>
     <BtnSaveProject :projectData="{calkLayers,calkLayersEverCount,frameRate,drawingToolsData,memoryColorPalette,displayedFrame,selectedCalk,lineWidth,onionValue,onionLayerState,}"></BtnSaveProject>
+  </div>
     <div id="upper-section">
       <div class="tool-section">
         <div id="tool-parameters">
@@ -120,7 +122,6 @@
       </span>
     </div>
     <div id="lower-section">
-
       <div id="timeline" @click="readCurrentFrame">
         <div v-for="(calk, calkIndex) in calkLayers" :key="calk" class="layer" @click="selectedCalk = calkIndex">
           <span v-if="calkIndex == selectedCalk" class="layer-head layer-head-selected">
@@ -142,7 +143,6 @@
             <button @click="displayCalkLayer(calkIndex)" v-else>
               <img src="@/assets/closed-eye.png" alt="closed-eye">
             </button>
-
             <button @click="hideOnionLayer(calkIndex)" v-if="calkLayers[calkIndex].onion == true">
               <img src="@/assets/onion.png" alt="onion">
             </button>
@@ -166,7 +166,6 @@
             <button v-else>
               <img @click="displayCalkLayer(calkIndex)" src="@/assets/closed-eye.png" alt="closed-eye">
             </button>
-
             <button @click="hideOnionLayer(calkIndex)" v-if="calkLayers[calkIndex].onion == true">
               <img src="@/assets/onion.png" alt="onion">
             </button>
@@ -185,7 +184,6 @@
         </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -267,6 +265,7 @@ export default {
     this.selectTool(this.toolsMetaData.crayon);
     this.drawingToolsData.currentColor = `rgba(0, 0, 0, ${this.drawingToolsData.currentOpacity/100})`;
     this.drawColorCanvas();
+    this.readCurrentFrame();
   },
   methods: {
 

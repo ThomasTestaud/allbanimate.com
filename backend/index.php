@@ -68,8 +68,8 @@ exit;
             $decoded = $authController->authenticate(); // Authenticate the user before processing the request
             $userId = $decoded->userId->id; // Extract userId
 
-            $controller = new Controllers\GraphsController();
-            $controller->createNewGraph($userId);
+            $controller = new Controllers\ProjectsController();
+            $controller->saveProject($userId);
         break;
 
     }

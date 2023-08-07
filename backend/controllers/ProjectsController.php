@@ -12,9 +12,9 @@ class ProjectsController
         $content = file_get_contents("php://input");
         $data = json_decode($content, true);
 
-        $graphName = $data['graphName'];
+        $projectName = $data['graphName'];
 
-        $graphName = str_replace(' ', '_', $graphName);
+        $projectName = str_replace(' ', '_', $projectName);
 
         $projectDefaultData = '{
           "calkLayers": [
@@ -56,7 +56,7 @@ class ProjectsController
           $projectDefaultData = preg_replace('/[ \t\n\r\v\f\\\\]/', '', $projectDefaultData);
 
         $model = new \Models\Projects();
-        $result = $model->createNewProject($userId, $graphName, $projectDefaultData);
+        $result = $model->createNewProject($userId, $projectName, $projectDefaultData);
 
         echo $result; // Send back the ID of the created list
         exit;
@@ -72,7 +72,6 @@ class ProjectsController
 
         $json = json_encode($data);
         echo ($json);
-        //echo ("hey");
         exit;
     }
 
@@ -88,7 +87,24 @@ class ProjectsController
 
         $json = json_encode($data);
         echo ($json);
-        //echo ("hey");
+        exit;
+    }
+
+    public function saveProject($userId)
+    {
+        $content = file_get_contents("php://input");
+        $data = json_decode($content, true);
+
+        $projectName = $data['projectName'];
+        $projectName = str_replace(' ', '_', $projectName);
+
+        $projectData = json_encode($data['projectData']);
+        
+        $model = new \Models\Projects();
+        $model->saveProject($userId, $projectName, $projectData);
+        
+        echo ("I guess save worked... ");
+        echo (strlen($projectData));
         exit;
     }
 }

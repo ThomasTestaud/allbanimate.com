@@ -53,4 +53,22 @@ class Projects extends Database
         $query->execute($params);
         return $query->fetch();
     }
+
+    public function saveProject($userId, $projectName, $projectData)
+    {
+        $req = "UPDATE `projects` 
+                SET `name`= :projectName,
+                    `data`= :projectData,
+                    `last_save`= CURRENT_TIMESTAMP
+                WHERE user_id = :userId AND name = :projectName;";
+
+        $params = [
+            "userId" => $userId,
+            "projectName" => $projectName,
+            "projectData" => $projectData
+        ];
+
+        $query = $this->bdd->prepare($req);
+        $query->execute($params);
+    }
 }

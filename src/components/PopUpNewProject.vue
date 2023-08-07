@@ -1,6 +1,11 @@
 <template>
-  <div class="view">
-    <router-link class="nav hover-1" to="/">Back</router-link>
+  <div @click="openPopUp">
+    <button>Create new project</button>
+  </div>
+  <div v-if="open" class="pop-up">
+    <button @click="closePopUp">
+      X
+    </button>
     <h1>New Project</h1>
     <label for="">Project Name</label><br>
     <input type="text" v-model="graphName"><br>
@@ -17,7 +22,8 @@
     data() {
       return {
         graphName: "",
-        data: []
+        data: [],
+        open: false,
       }
     },
   
@@ -54,7 +60,15 @@
 
       goToGraph(graphId) {
       this.$router.push({ path: `/graph/${graphId}` });
-    }
+    },
+
+    openPopUp() {
+      this.open = true;
+    },
+
+    closePopUp() {
+      this.open = false;
+    },
       
     }
   

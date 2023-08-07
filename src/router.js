@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Project from './views/Project.vue';
 import ConnectView from './views/Connect.vue';
 import CreateUser from './views/CreateUser.vue';
-import NewProject from './views/NewProject.vue';
 import MyProjects from './views/MyProjects.vue';
 
 const routes = [
@@ -22,10 +21,6 @@ const routes = [
     {
         path: '/create-account',
         component: CreateUser
-    },
-    {
-        path: '/new-project',
-        component: NewProject
     },
 ];
 
