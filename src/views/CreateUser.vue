@@ -1,5 +1,6 @@
   <template>
     <div class="view">
+      <img src="@/assets/allba.png" alt="Allbanimate logo">
       <p>{{ errors }}</p>
       <label for="">Username</label><br>
       <input type="text" v-model="username"><br>
@@ -76,8 +77,18 @@
   <style scoped>
     .view {
       padding-top: 80px;
+      text-align: center;
       /*height: 100%;*/
     }
+
+    .view > * {
+      border-radius: 1rem;
+    }
+
+    img {
+      height: 7rem;
+    }
+
     input {
       margin-bottom: 2rem;
     }

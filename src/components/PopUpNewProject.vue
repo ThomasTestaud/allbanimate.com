@@ -1,9 +1,9 @@
 <template>
   <div @click="openPopUp">
-    <button>Create new project</button>
+    <button class="btn-primary">Create new project</button>
   </div>
   <div v-if="open" class="pop-up">
-    <button @click="closePopUp">
+    <button class="cross" @click="closePopUp">
       X
     </button>
     <h1>New Project</h1>
@@ -77,14 +77,31 @@
 
   <style scoped>
 
-  .view {
-    padding-top: 100px;
-    /*height: 100%;*/
+  .btn-primary {
+    font-size: 1.5rem;
+    padding: 1rem;
+    border-radius: 2rem;
+    border: 2px solid rgb(57, 57, 57);
+    background-color: rgb(231, 231, 231);
+    transition: background-color 0.1s;
+    }
 
-  }
+    .btn-primary:hover {
+      background-color: var(--selected-background);
+    }
 
   input {
     margin-bottom: 1rem;
+  }
+    
+
+  .cross {
+    background-color: inherit;
+    border: 0px solid black;
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+    font-size: 2rem;
   }
 
   </style>

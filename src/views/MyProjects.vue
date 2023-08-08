@@ -1,18 +1,22 @@
   <template>
 
+    <div class="parameter-bar">
       <BtnDeconnexion/>
+    </div>
       
-      <NewProject/>
+      <div class="container">
+        <NewProject/>
 
-      <div v-if="projectList.length > 0">
-        <div v-for="project in projectList" @click="openProject(project.name)" :key="project">
-          <h2>{{ project.name }}</h2>
-          <p>Last save: {{ project.last_save }}</p>
+        <template v-if="projectList.length > 0">
+          <div class="clickable-card" v-for="project in projectList" @click="openProject(project.name)" :key="project">
+            <h2>{{ project.name }}</h2>
+            <p>Last save: {{ project.last_save }}</p>
+          </div>
+        </template>
+
+        <div v-else>
+          We are fetching your projects...
         </div>
-      </div>
-
-      <div v-else>
-        We are fetching your projects...
       </div>
 
   </template>
@@ -72,5 +76,21 @@
   
   <!-- Add "scoped" attribute to limit CSS to this component only -->
   <style scoped>
-    
+    .container {
+      margin: 2rem;
+    }
+
+    .clickable-card {
+      border: 2px solid rgb(57, 57, 57);
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: 1rem;
+      background-color: rgb(186, 186, 186);
+      cursor: pointer;
+      transition: background-color 0.1s;
+    }
+
+    .clickable-card:hover {
+      background-color: var(--selected-background);
+    }
   </style>

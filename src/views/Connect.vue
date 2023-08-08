@@ -1,6 +1,7 @@
   <template>
     <div class="view">
       
+      <img src="@/assets/allba.png" alt="Allbanimate logo">
       <p>{{ errors }}</p>
       <label for="username">Username</label><br>
       <input type="text" name="username" v-model="username"><br>
@@ -46,7 +47,7 @@
               if(response.data.auth){
                 const token = response.data.token;
                 localStorage.setItem("token", token); // Save the JWT token in local storage
-                this.$router.push({ path: `/` });
+                this.$router.push({ path: `/my-projects` });
               }else{
                 this.errors = "Username or password incorrect.";
               }
@@ -93,8 +94,18 @@
   <style scoped>
     .view {
       padding-top: 80px;
+      text-align: center;
       /*height: 100%;*/
     }
+
+    .view > * {
+      border-radius: 1rem;
+    }
+
+    img {
+      height: 7rem;
+    }
+
     input {
       margin-bottom: 2rem;
     }

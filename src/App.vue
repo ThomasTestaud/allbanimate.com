@@ -15,10 +15,29 @@ export default {
 
 <style>
 
+:root {
+  --primary-color: #3498db;
+  --element-background-color: rgb(186, 186, 186);
+  --selected-background: rgb(133, 133, 214);
+}
+
 body {
   background-color: grey;
   margin: 0px;
 }
+
+.dropdown-menu {
+  background-color: rgb(191, 191, 191) !important;
+}
+
+.custom-bg {
+  background-color: grey;
+}
+
+.dropdown-item {
+  cursor: pointer;
+}
+
 
 #app {
   font-family: sans-serif;
@@ -59,6 +78,11 @@ button {
 }
 .parameter-bar a {
   text-decoration: none;
+  color: inherit;
+}
+.parameter-bar button {
+  background-color: inherit;
+  border: 0px solid black;
   color: inherit;
 }
 </style>

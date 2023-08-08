@@ -1,6 +1,31 @@
 <template>
+ 
   <div class="parameter-bar">
     <router-link to="/my-projects">My projects</router-link>
+    <!--
+    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+      Edit
+    </a>
+    <ul class="dropdown-menu">
+        <li class="dropdown-item">Create new layer</li>
+        <li class="dropdown-item" @click="createNewLayer">Create new layer</li>
+        <li class="dropdown-item" @click="deleteSelectedLayer">Delete selected layer</li>
+        <li class="dropdown-item" v-if="renamingLayer" @click="renameLayerFalse">Rename layer</li>
+        <li class="dropdown-item" v-else @click="renameLayerTrue">Rename selected layer</li>
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-item" @click="createNewFrame">Create new frame</li>
+        <li class="dropdown-item" @click="duplicateSelectedFrame">Duplicate selected frame</li>
+        <li class="dropdown-item" @click="deleteSelectedFrame">Delete selected frame</li>
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-item">
+          <span>
+            <label for="frame-rate">Frame rate: </label>
+            <input type="number" id="frame-rate" v-model="frameRate" @keyup="updateFrameRate" @click="updateFrameRate">
+            /s
+          </span>
+        </li>
+    </ul>-->
+
     <BtnSaveProject :projectData="{calkLayers,calkLayersEverCount,frameRate,drawingToolsData,memoryColorPalette,displayedFrame,selectedCalk,lineWidth,onionValue,onionLayerState,}"></BtnSaveProject>
   </div>
     <div id="upper-section">
@@ -49,8 +74,19 @@
           <button @click="emptyCanvas"><img src="@/assets/clearcanvas.png" alt="clearcanvas"></button>
         </div>
       </div>
-      <canvas ref="canvas" id="myCanvas" width="800" height="500"
-      @mousedown="handleMouseDown" @mouseup="handleMouseUp" @mouseleave="handleMouseUp" @mousemove="handleMouseMove"></canvas>
+
+      <div class="canvas-container">
+        <canvas ref="canvas" id="myCanvas" width="800" height="500"
+        @mousedown="handleMouseDown" @mouseup="handleMouseUp" @mouseleave="handleMouseUp" @mousemove="handleMouseMove"></canvas>
+        
+        <div id="video-controls">
+          <button @click="previousFrame"><img src="@/assets/leftskip.png" alt="leftskip"></button>
+          <button @click="stop"><img src="@/assets/pause.png" alt="pause"></button>
+          <button @click="play"><img src="@/assets/play.png" alt="play"></button>
+          <button @click="nextFrame"><img src="@/assets/rightskip.png" alt="rightskip"></button>
+        </div>
+      </div>
+      
       <div class="tool-section tool-section-right">
         <div id="color-tools">
           <canvas ref="colorCanvas" id="color-canvas" width="300" height="100" @click="pickColorFromColorCanvas"></canvas>
@@ -97,30 +133,27 @@
         </div>
       </div>
     </div>
-    <div id="video-controls">
-      <button @click="previousFrame"><img src="@/assets/leftskip.png" alt="leftskip"></button>
-      <button @click="stop"><img src="@/assets/pause.png" alt="pause"></button>
-      <button @click="play"><img src="@/assets/play.png" alt="play"></button>
-      <button @click="nextFrame"><img src="@/assets/rightskip.png" alt="rightskip"></button>
-    </div>
+    
+    
     <div id="frame-parameters">
-      <span>
+      <span class="params">
         <button @click="createNewLayer">Create new layer</button>
         <button @click="deleteSelectedLayer">Delete selected layer</button>
         <button v-if="renamingLayer" @click="renameLayerFalse" class="selected">Rename layer</button>
         <button v-else @click="renameLayerTrue">Rename layer</button>
       </span>
-      <span>
+      <span class="params">
         <button @click="createNewFrame">Create new frame</button>
         <button @click="duplicateSelectedFrame">Duplicate selected frame</button>
         <button @click="deleteSelectedFrame">Delete selected frame</button>
       </span>
-      <span>
+      <span style="margin-right:5px;">
         <label for="frame-rate">Frame rate: </label>
         <input type="number" id="frame-rate" v-model="frameRate" @keyup="updateFrameRate" @click="updateFrameRate">
         /s
       </span>
     </div>
+
     <div id="lower-section">
       <div id="timeline" @click="readCurrentFrame">
         <div v-for="(calk, calkIndex) in calkLayers" :key="calk" class="layer" @click="selectedCalk = calkIndex">
@@ -130,11 +163,11 @@
             </div>
             <div class="layer-name" v-else>{{ calk.name }}</div>
             <div class="layer-arrows">
-              <button>
-                <img @click="moveLayerTowardTop(calkIndex)" src="@/assets/arrow-up.png" alt="arrow-up">
+              <button @click="moveLayerTowardTop(calkIndex)">
+                <!--<img  src="@/assets/arrow-up.png" alt="arrow-up">-->
               </button>
-              <button>
-                <img @click="moveLayerTowardBottom(calkIndex)" src="@/assets/arrow-down.png" alt="arrow-down">
+              <button @click="moveLayerTowardBottom(calkIndex)">
+                <!--<img  src="@/assets/arrow-down.png" alt="arrow-down">-->
               </button>
             </div>
             <button @click="hideCalkLayer(calkIndex)" v-if="calkLayers[calkIndex].displayed == true">
@@ -153,11 +186,11 @@
           <span v-else class="layer-head">
             <div class="layer-name">{{ calk.name }}</div>
             <div class="layer-arrows">
-              <button>
-                <img @click="moveLayerTowardTop(calkIndex)" src="@/assets/arrow-up.png" alt="arrow-up">
+              <button @click="moveLayerTowardTop(calkIndex)">
+                <!--<img  src="@/assets/arrow-up.png" alt="arrow-up">-->
               </button>
-              <button>
-                <img @click="moveLayerTowardBottom(calkIndex)" src="@/assets/arrow-down.png" alt="arrow-down">
+              <button @click="moveLayerTowardBottom(calkIndex)">
+                <!--<img  src="@/assets/arrow-down.png" alt="arrow-down">-->
               </button>
             </div>
             <button @click="hideCalkLayer(calkIndex)" v-if="calkLayers[calkIndex].displayed == true">
@@ -732,6 +765,7 @@ export default {
   #upper-section {
     display: flex;
     justify-content: space-around;
+    margin-bottom: 10px;
   }
 
   .tool-section,
@@ -758,6 +792,7 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    max-height: 500px;
   }
 
   #tool-parameters {
@@ -801,6 +836,8 @@ export default {
     margin: 0.5rem;
     height: 3rem;
     cursor: pointer;
+    border: 2px solid grey;
+    border-radius: 3px;
   }
 
   .tool-section-right {
@@ -849,6 +886,19 @@ export default {
   #video-controls {
     display: flex;
     justify-content: center;
+    margin: auto;
+  }
+
+  #video-controls button {
+    height: 35px;
+    width: 35px;
+    padding: 2px;
+    margin: 0px;
+  }
+
+  #video-controls img {
+    height: 100%;
+    /*width: 100%;*/
   }
 
   #frame-parameters {
@@ -885,12 +935,33 @@ export default {
 
   #lower-section {
     min-height: 50px;
-    padding: 3px;
+    padding: 0px 3px;
     overflow: auto;
+    border-radius: 2px;
   }
 
   #lower-section button {
     margin: 1px;
+    
+  }
+
+  #lower-section, #frame-parameters {
+    margin: 0px 8px;
+  }
+
+  #frame-parameters button {
+    margin: 2px;
+  }
+
+  #frame-parameters .params {
+    border-top: 1px solid rgb(57, 57, 57);
+    border-left: 1px solid rgb(57, 57, 57);
+    border-right: 1px solid rgb(57, 57, 57);
+    border-bottom: 1px solid rgb(186, 186, 186);
+    background-color: rgb(186, 186, 186);
+    position: relative;
+    top: 1px;
+    min-height: 25px;
   }
 
   .selected-frame, .selected {
@@ -905,7 +976,7 @@ export default {
   .semi-selected-frame {
     background-color: rgb(233, 233, 255);
     border-radius: 3px;
-    border: 2px solid rgb(139, 139, 139);
+    border: 2px solid rgb(137, 137, 216);
   }
 
   .empty-selected-frame {
@@ -955,6 +1026,10 @@ export default {
     background-color: rgb(152, 152, 152);
     padding: 4px;
     /*width: 150px;*/
+  }
+
+  .frame {
+    height: 50px;;
   }
 
   .layer-head-selected {
