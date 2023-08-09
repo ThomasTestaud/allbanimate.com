@@ -51,8 +51,8 @@
             userPassword: this.password
         };
         
-        axios.post('http://localhost:3000/VueJS_projects/allbanimate.com/backend/index.php?route=user', requestBody) // DEV
-        //axios.post('https://api-events-on-time.thomastestaud.com/index.php?route=user', requestBody) // PROD
+        //axios.post('http://localhost:3000/VueJS_projects/allbanimate.com/backend/index.php?route=user', requestBody) // DEV
+        axios.post('https://allbanimate.thomastestaud.com/backend/index.php?route=user', requestBody) // PROD
         .then(response => {
 
           if(response.data.auth){

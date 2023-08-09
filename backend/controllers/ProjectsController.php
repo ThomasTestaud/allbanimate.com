@@ -58,7 +58,7 @@ class ProjectsController
         $model = new \Models\Projects();
         $result = $model->createNewProject($userId, $projectName, $projectDefaultData);
 
-        echo $result; // Send back the ID of the created list
+        echo $projectName; // Send back the ID of the created list
         exit;
     }
 

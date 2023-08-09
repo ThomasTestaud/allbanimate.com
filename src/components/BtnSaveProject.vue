@@ -38,19 +38,22 @@
                     }
                 };
 
-                axios.put('http://localhost:3000/VueJS_projects/allbanimate.com/backend/index.php?route=save-project', requestBody, config) // DEV
-                //axios.post('https://api-events-on-time.thomastestaud.com/index.php?route=event', requestBody, config) //PROD
+                //axios.put('http://localhost:3000/VueJS_projects/allbanimate.com/backend/index.php?route=save-project', requestBody, config) // DEV
+                axios.put('https://allbanimate.thomastestaud.com/backend/index.php?route=save-project', requestBody, config) //PROD
                     
                 .then(response => {
                     
                     console.log(response.data);
+                    this.$emit('save', true);
                    
                 })
                     
                 .catch(error => {
                     console.log(error);
+                    this.$emit('save', false);
                 });
             },
+
         }
     }
 </script>

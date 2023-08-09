@@ -6,6 +6,10 @@ import MyProjects from './views/MyProjects.vue';
 
 const routes = [
     {
+        path: '/',
+        component: ConnectView
+    },
+    {
         path: '/project/:name',
         name: 'Project',
         component: Project

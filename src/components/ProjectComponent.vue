@@ -2,30 +2,6 @@
  
   <div class="parameter-bar">
     <router-link to="/my-projects">My projects</router-link>
-    <!--
-    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-      Edit
-    </a>
-    <ul class="dropdown-menu">
-        <li class="dropdown-item">Create new layer</li>
-        <li class="dropdown-item" @click="createNewLayer">Create new layer</li>
-        <li class="dropdown-item" @click="deleteSelectedLayer">Delete selected layer</li>
-        <li class="dropdown-item" v-if="renamingLayer" @click="renameLayerFalse">Rename layer</li>
-        <li class="dropdown-item" v-else @click="renameLayerTrue">Rename selected layer</li>
-        <li><hr class="dropdown-divider"></li>
-        <li class="dropdown-item" @click="createNewFrame">Create new frame</li>
-        <li class="dropdown-item" @click="duplicateSelectedFrame">Duplicate selected frame</li>
-        <li class="dropdown-item" @click="deleteSelectedFrame">Delete selected frame</li>
-        <li><hr class="dropdown-divider"></li>
-        <li class="dropdown-item">
-          <span>
-            <label for="frame-rate">Frame rate: </label>
-            <input type="number" id="frame-rate" v-model="frameRate" @keyup="updateFrameRate" @click="updateFrameRate">
-            /s
-          </span>
-        </li>
-    </ul>-->
-
     <BtnSaveProject :projectData="{calkLayers,calkLayersEverCount,frameRate,drawingToolsData,memoryColorPalette,displayedFrame,selectedCalk,lineWidth,onionValue,onionLayerState,}"></BtnSaveProject>
   </div>
     <div id="upper-section">
@@ -226,7 +202,7 @@ import BtnSaveProject from '../components/BtnSaveProject.vue';
 export default {
   name: 'projectComponent',
   components: {
-    BtnSaveProject
+    BtnSaveProject,
   },
   props: {
     projectData: Object,

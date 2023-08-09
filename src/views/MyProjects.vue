@@ -14,9 +14,7 @@
           </div>
         </template>
 
-        <div v-else>
-          We are fetching your projects...
-        </div>
+        <LoaderElement v-else msg="We are fetching your projects..."/>
       </div>
 
   </template>
@@ -25,12 +23,14 @@
   import axios from 'axios';
   import BtnDeconnexion from '../components/BtnDeconnexion.vue';
   import NewProject from '../components/PopUpNewProject.vue';
+  import LoaderElement from '../components/LoaderElement.vue';
 
   export default {
     name: 'MyProjects',
     components: {
       BtnDeconnexion,
-      NewProject
+      NewProject,
+      LoaderElement
     }, 
     data() {
       return {
@@ -51,8 +51,8 @@
             Authorization: `Bearer ${token}`
           }
         };
-        axios.get(`http://localhost:3000/VueJS_projects/allbanimate.com/backend/index.php?route=project-list`, config) //DEV
-        //axios.get(`https://api-events-on-time.thomastestaud.com/index.php?route=list`, config) //PROD
+        //axios.get(`http://localhost:3000/VueJS_projects/allbanimate.com/backend/index.php?route=project-list`, config) //DEV
+        axios.get(`https://allbanimate.thomastestaud.com/backend/index.php?route=project-list`, config) //PROD
         
         .then(response => {
           this.projectList = response.data;

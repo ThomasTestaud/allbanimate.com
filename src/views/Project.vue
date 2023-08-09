@@ -1,6 +1,6 @@
   <template>
       
-      <div v-if="response == true">We are fetching your project...</div>
+      <LoaderElement v-if="response == true" msg="We are fetching your projects..."/>
       <projectComponent v-if="response instanceof Object" :projectData="response"/>
 
   </template>
@@ -8,12 +8,14 @@
   <script>
   import projectComponent from '../components/ProjectComponent.vue';
   import axios from 'axios';
+  import LoaderElement from '../components/LoaderElement.vue';
   
 
   export default {
     name: 'HomeComponent',
     components: {
       projectComponent,
+      LoaderElement
     }, 
 
     data() {
@@ -39,8 +41,8 @@
             Authorization: `Bearer ${token}`
           }
         };
-        axios.get(`http://localhost:3000/VueJS_projects/allbanimate.com/backend/index.php?route=project&projectName=${this.$route.params.name}`, config) //DEV
-        //axios.get(`https://api-events-on-time.thomastestaud.com/index.php?route=list`, config) //PROD
+        //axios.get(`http://localhost:3000/VueJS_projects/allbanimate.com/backend/index.php?route=project&projectName=${this.$route.params.name}`, config) //DEV
+        axios.get(`https://allbanimate.thomastestaud.com/backend/index.php?route=project&projectName=${this.$route.params.name}`, config) //PROD
         .then(response => {
 
           this.response = JSON.parse(response.data.data);
