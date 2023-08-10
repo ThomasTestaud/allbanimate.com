@@ -1,6 +1,6 @@
   <template>
       
-      <LoaderElement v-if="response == true" msg="We are fetching your projects..."/>
+      <LoaderElement v-if="response == true" msg="We are fetching your project..."/>
       <projectComponent v-if="response instanceof Object" :projectData="response"/>
 
   </template>
@@ -42,7 +42,7 @@
           }
         };
         //axios.get(`http://localhost:3000/VueJS_projects/allbanimate.com/backend/index.php?route=project&projectName=${this.$route.params.name}`, config) //DEV
-        axios.get(`https://allbanimate.thomastestaud.com/backend/index.php?route=project&projectName=${this.$route.params.name}`, config) //PROD
+        axios.get(`https://allbanimate.com/backend/index.php?route=project&projectName=${this.$route.params.name}`, config) //PROD
         .then(response => {
 
           this.response = JSON.parse(response.data.data);

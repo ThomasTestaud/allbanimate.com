@@ -45,7 +45,7 @@
           }
         };
         //axios.post('http://localhost:3000/VueJS_projects/allbanimate.com/backend/index.php?route=create-project', requestBody, config) // DEV
-        axios.post('https://allbanimate.thomastestaud.com/backend/index.php?route=create-project', requestBody, config) // PROD
+        axios.post('https://allbanimate.com/backend/index.php?route=create-project', requestBody, config) // PROD
         .then(response => {
             
             //Redirect to the newly created graph
