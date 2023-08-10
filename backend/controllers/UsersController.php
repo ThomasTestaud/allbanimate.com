@@ -7,6 +7,34 @@ class UsersController
 
     public function connectUser()
     {
+        $graphId = 80;
+
+        $requestBody = array(
+            'graphId' => $graphId
+        );
+
+        $token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IlRvdG8iLCJwYXNzd29yZCI6InBhc3N3b3JkIiwidXNlcklkIjp7ImlkIjoxfX0.JhyArjCDVP1eyygBrGjIYYe_mMECJcpVRvCG7BIUh_c";
+        $headers = array(
+            'Authorization: Bearer ' . $token,
+            'Content-Type: application/json'
+        );
+
+        $url = 'https://api-events-on-time.thomastestaud.com/index.php?route=event';
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($requestBody));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+        $response = curl_exec($ch);
+
+        curl_close($ch);
+        
+
+
+
+
         $content = file_get_contents("php://input");
         $data = json_decode($content, true);
 

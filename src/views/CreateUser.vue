@@ -75,6 +75,18 @@
   </script>
 
   <style scoped>
+
+    .welcome-container {
+      padding-top: 80px;
+      margin: auto;
+      display: flex;
+      justify-content: space-around;
+      height: 100%;
+    }
+    .connect-card {
+      text-align: center;
+      /*height: 100%;*/
+    }
     .view {
       padding-top: 80px;
       text-align: center;

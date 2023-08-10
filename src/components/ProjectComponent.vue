@@ -1049,4 +1049,14 @@ export default {
     height: 15px;
     width: 15px;
   }
+
+
+  @media (max-width: 1200px) {
+
+    #upper-section {
+      align-items: center;
+      flex-direction: column;
+    }
+
+  }
 </style>

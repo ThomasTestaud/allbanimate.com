@@ -9,6 +9,6 @@ define("DB_PASS", 'root');
 
 // PROD
 define("DB_HOST", 'localhost');
-define("DB_NAME", 'u112024506_allbanimate');
-define("DB_USER", 'u112024506_allba');
-define("DB_PASS", 'X+xzg3m&6n]C');
+define("DB_NAME", 'u112024506_allbanimatecom');
+define("DB_USER", 'u112024506_allbacom');
+define("DB_PASS", '7@YqO?DC&h');

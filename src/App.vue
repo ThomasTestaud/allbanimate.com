@@ -1,6 +1,11 @@
 <template>
     
     <router-view></router-view>
+    <div class="phone">
+      <img src="@/assets/allba.png" alt="Allbanimate logo">
+      <h2>Sorry,</h2>
+      <p>Allbanimate isn't supported on small screens yet...</p>
+    </div>
 
 </template>
 
@@ -19,6 +24,7 @@ export default {
   --primary-color: #3498db;
   --element-background-color: rgb(186, 186, 186);
   --selected-background: rgb(133, 133, 214);
+  --main-background: grey;
 }
 
 body {
@@ -31,7 +37,7 @@ body {
 }
 
 .custom-bg {
-  background-color: grey;
+  background-color: var(--main-background);
 }
 
 .dropdown-item {
@@ -48,7 +54,7 @@ body {
   left: 50%;
   top: 40%;
   transform: translate(-50%, -50%);
-  background-color: grey;
+  background-color: var(--main-background);
   border: 2px solid black;
   border-radius: 10px;
   padding: 20px;
@@ -85,4 +91,30 @@ button {
   border: 0px solid black;
   color: inherit;
 }
+
+.phone {
+  padding-top: 100px;
+  text-align: center;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  height: 100vh;
+  width: 100vw;
+  background-color: var(--main-background);
+  display: none;
+}
+
+.phone img {
+  height: 100px;
+}
+
+
+@media (max-width: 800px) {
+  
+  .phone {
+    display: inline;
+  }
+  
+}
+
 </style>

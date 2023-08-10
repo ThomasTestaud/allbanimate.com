@@ -38,6 +38,7 @@ exit;
             $controller->createUser();
         break;
     }
+
 } elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     switch ($_GET['route']) {
@@ -73,6 +74,7 @@ exit;
         break;
 
     }
+
 } elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
 
     switch ($_GET['route']) {
@@ -84,8 +86,8 @@ exit;
             //$controller = new Controllers\EventsController();
             //$controller->deleteLastEvent($userId);
         break;
-
     }
+
 }  else {
 
     $json = json_encode('else   ');
