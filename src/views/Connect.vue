@@ -1,21 +1,24 @@
   <template>
-    <div class="view">
-      
-      <img src="@/assets/allba.png" alt="Allbanimate logo">
-      <p>{{ errors }}</p>
-      <label for="username">Username</label><br>
-      <input type="text" name="username" v-model="username"><br>
-      <label for="password">Password</label><br>
-      <input type="password" name="password" v-model="password"><br>
-      <button @click="connect" class="hover-3">Connexion</button><br>
-      <div class="sub-text-1"><p>Or</p></div>
-      <button id="lastbtn" @click="connectAsJohnDoe()" class="hover-3"><div class="sub-text-1">Connect as </div>John Doe</button><br>
-      <router-link to="/create-account">Create a new account</router-link>
+    <div class="welcome-container">
+      <WelcomeCard/>
+      <div class="connect-card">
+        <img src="@/assets/allba.png" alt="Allbanimate logo">
+        <p>{{ errors }}</p>
+        <label for="username">Username</label><br>
+        <input type="text" name="username" v-model="username"><br>
+        <label for="password">Password</label><br>
+        <input type="password" name="password" v-model="password"><br>
+        <button @click="connect" class="hover-3">Connexion</button><br>
+        <div class="sub-text-1"><p>Or</p></div>
+        <button id="lastbtn" @click="connectAsJohnDoe()" class="hover-3"><div class="sub-text-1">Connect as </div>John Doe</button><br>
+        <router-link to="/create-account">Create a new account</router-link>
+      </div>
     </div>
   </template>
   
   <script>
   import axios from 'axios';
+  import WelcomeCard from '../components/WelcomeCard';
   
   export default {
     name: 'ConnectView',
@@ -30,6 +33,7 @@
     },
 
     components: {
+      WelcomeCard
     },
   
     methods: {
@@ -92,13 +96,20 @@
   </script>
 
   <style scoped>
-    .view {
+
+    .welcome-container {
       padding-top: 80px;
+      margin: auto;
+      display: flex;
+      justify-content: space-around;
+      height: 100%;
+    }
+    .connect-card {
       text-align: center;
       /*height: 100%;*/
     }
 
-    .view > * {
+    .connect-card > * {
       border-radius: 1rem;
     }
 
