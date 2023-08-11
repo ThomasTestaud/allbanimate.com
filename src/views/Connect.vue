@@ -151,6 +151,7 @@
 
     .welcome-container {
       padding-top: 80px;
+      padding: 1rem;
       max-width: 1400px;
       margin: auto;
       display: flex;
