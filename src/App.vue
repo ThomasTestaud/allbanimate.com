@@ -109,7 +109,7 @@ button {
 }
 
 
-@media (max-width: 800px) {
+@media (max-width: 801px) {
   
   .phone {
     display: inline;
