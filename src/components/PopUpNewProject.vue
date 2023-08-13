@@ -100,4 +100,19 @@
     font-size: 2rem;
   }
 
+  .pop-up {
+    position: fixed;
+    left: 50%;
+    top: 40%;
+    transform: translate(-50%, -50%);
+    background-color: var(--main-background);
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 20px;
+    min-width: 50%;
+    text-align: center;
+  }
+
+  
+
   </style>

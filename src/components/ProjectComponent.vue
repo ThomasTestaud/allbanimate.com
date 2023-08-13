@@ -745,9 +745,9 @@ export default {
   }
 
   .tool-section,
-  canvas,
+  #myCanvas,
   #lower-section {
-    border: 1px solid rgb(57, 57, 57);
+    border: 2px solid rgb(57, 57, 57);
     border-radius: 3px;
   }
 
@@ -814,6 +814,7 @@ export default {
     cursor: pointer;
     border: 2px solid var(--main-background);
     border-radius: 3px;
+    background-color: var(--button-color);
   }
 
   .tool-section-right {
@@ -930,46 +931,44 @@ export default {
   }
 
   #frame-parameters .params {
-    border-top: 1px solid rgb(57, 57, 57);
-    border-left: 1px solid rgb(57, 57, 57);
-    border-right: 1px solid rgb(57, 57, 57);
-    border-bottom: 1px solid rgb(186, 186, 186);
-    background-color: rgb(186, 186, 186);
+    border: 2px solid rgb(57, 57, 57);
+    border-bottom: 1px solid var(--element-background-color);
+    background-color: var(--element-background-color);
     position: relative;
-    top: 1px;
+    top: 2px;
     min-height: 25px;
   }
 
   .selected-frame, .selected {
-    border: 2px solid rgb(79, 79, 175);
+    border: 2px solid var(--selected-border);
     border-radius: 3px;
   }
 
   .selected {
-    background-color: rgb(203, 203, 223);
+    background-color: var(--button-color);
   }
 
   .semi-selected-frame {
-    background-color: rgb(233, 233, 255);
+    background-color: var(--button-color);
     border-radius: 3px;
     border: 2px solid rgb(137, 137, 216);
   }
 
   .empty-selected-frame {
-    background-color: rgba(182, 182, 217, 0);
+    background-color: inherit;
     border-radius: 3px;
-    border: 2px solid rgb(58, 58, 173);
+    border: 2px solid var(--selected-border);
   }
   .empty-semi-selected-frame {
-    background-color: rgba(182, 182, 217, 0);
+    background-color: inherit;
     border-radius: 3px;
-    border: 2px solid rgb(133, 133, 214);
+    border: 2px solid var(--selected-background);
   }
 
   .empty-frame {
     background-color: rgba(182, 182, 217, 0);
     border-radius: 3px;
-    border: 2px solid grey;
+    border: 2px solid var(--main-background);
   }
 
   .layer {
@@ -978,7 +977,7 @@ export default {
   }
 
   .layer + .layer {
-    border-bottom: 1px dashed grey;
+    border-bottom: 1px dashed var(--main-background);
   }
 
   .layer-name {
@@ -997,9 +996,9 @@ export default {
     align-items: center;
     justify-content: space-around;
     height: auto;
-    border: 2px solid grey;
+    border: 2px solid var(--main-background);
     border-radius: 3px;
-    background-color: rgb(152, 152, 152);
+    background-color: var(--element2-background-color);
     padding: 4px;
     /*width: 150px;*/
   }
@@ -1009,8 +1008,8 @@ export default {
   }
 
   .layer-head-selected {
-    border: 2px solid rgb(58, 58, 173);
-    background-color: rgb(168, 168, 221);
+    border: 2px solid var(--selected-border);
+    background-color: var(--selected-background);
   }
   .layer-arrows {
     display: flex;

@@ -19,49 +19,32 @@ export default {
 </script>
 
 <style>
-
+/*
 :root {
-  --primary-color: #3498db;
   --element-background-color: rgb(186, 186, 186);
   --element2-background-color: rgb(152, 152, 152);
   --button-color: rgba(255, 255, 255, 0.591);
   --selected-background: rgb(133, 133, 214);
+  --selected-border: rgb(51, 51, 192);
   --main-background: grey;
+}*/
+
+:root {
+  --element-background-color: #c6ac8f;
+  --element2-background-color: #eae0d5;
+  --button-color: #eae0d5;
+  --selected-background: #fee440;
+  --selected-border: #ff7d00;
+  --main-background: #5e503f;
 }
 
 body {
-  background-color: grey;
+  background-color: var(--main-background);
   margin: 0px;
 }
 
-.dropdown-menu {
-  background-color: rgb(191, 191, 191) !important;
-}
-
-.custom-bg {
-  background-color: var(--main-background);
-}
-
-.dropdown-item {
-  cursor: pointer;
-}
-
-
 #app {
   font-family: sans-serif;
-}
-
-.pop-up {
-  position: fixed;
-  left: 50%;
-  top: 40%;
-  transform: translate(-50%, -50%);
-  background-color: var(--main-background);
-  border: 2px solid black;
-  border-radius: 10px;
-  padding: 20px;
-  min-width: 50%;
-  text-align: center;
 }
 
 button {
@@ -77,6 +60,7 @@ button {
   padding: 2px;
   border-bottom: 1px solid rgb(55, 55, 55);
 }
+
 .parameter-bar > * + * {
   margin-left: 10px;
 }
