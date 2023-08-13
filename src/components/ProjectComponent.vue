@@ -761,7 +761,7 @@ export default {
 
   .tool-section,
   #lower-section {
-    background-color: rgb(186, 186, 186);
+    background-color: var(--element-background-color);
   }
 
   .tool-section {
@@ -774,8 +774,8 @@ export default {
   #tool-parameters {
     display: flex;
     flex-direction: column;
-    border-bottom: 1px solid grey;
-    background-color: rgb(152, 152, 152);
+    border-bottom: 1px solid var(--main-background);
+    background-color: var(--element2-background-color);
     border-radius: 3px;
     padding-top: 5px;
   }
@@ -786,7 +786,7 @@ export default {
   }
 
   #tool-parameters div + div {
-    border-top: 1px dashed grey;
+    border-top: 1px dashed var(--main-background);
   }
 
   #tool-parameters label {
@@ -812,7 +812,7 @@ export default {
     margin: 0.5rem;
     height: 3rem;
     cursor: pointer;
-    border: 2px solid grey;
+    border: 2px solid var(--main-background);
     border-radius: 3px;
   }
 
@@ -823,8 +823,8 @@ export default {
   }
 
   #onion-parameters {
-    border: 1px solid grey;
-    background-color: rgb(152, 152, 152);
+    border: 1px solid var(--main-background);
+    background-color: var(--element2-background-color);
     border-radius: 2px;
     display: flex;
   }
@@ -836,7 +836,7 @@ export default {
     width: 40px;
   }
   .onion-layer + .onion-layer {
-    border-left: 1px dashed grey;
+    border-left: 1px dashed var(--main-background);
   }
   .onion-slider {
     transform: rotate(-90deg);
@@ -885,8 +885,8 @@ export default {
 
   #frame-parameters input {
     width: 5rem;
-    background-color: rgba(222, 222, 222, 0.847);
-    border: 1px solid grey;
+    background-color: var(--button-color);
+    border: 1px solid var(--main-background);
     border-radius: 3px;
     text-align: center;
   }
@@ -897,8 +897,8 @@ export default {
 
   #frame-parameters button {
     height: auto;
-    background-color: rgba(255, 255, 255, 0.591);
-    border: 1px solid grey;
+    background-color: var(--button-color);
+    border: 1px solid var(--main-background);
     border-radius: 5px;
   }
 

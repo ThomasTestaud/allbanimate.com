@@ -23,6 +23,8 @@ export default {
 :root {
   --primary-color: #3498db;
   --element-background-color: rgb(186, 186, 186);
+  --element2-background-color: rgb(152, 152, 152);
+  --button-color: rgba(255, 255, 255, 0.591);
   --selected-background: rgb(133, 133, 214);
   --main-background: grey;
 }
@@ -109,7 +111,7 @@ button {
 }
 
 
-@media (max-width: 801px) {
+@media (max-width: 800px) {
   
   .phone {
     display: inline;
