@@ -824,7 +824,7 @@ export default {
   }
 
   #onion-parameters {
-    border: 1px solid var(--border-color);
+    border-top: 1px solid var(--border-color);
     background-color: var(--element2-background-color);
     border-radius: 2px;
     display: flex;
@@ -945,7 +945,7 @@ export default {
   }
 
   .selected {
-    background-color: var(--button-color);
+    background-color: var(--selected-background);
   }
 
   .semi-selected-frame {
@@ -974,6 +974,7 @@ export default {
   .layer {
     display: flex;
     align-items: center;
+    padding: 1px 0px;
   }
 
   .layer + .layer {
@@ -1000,11 +1001,14 @@ export default {
     border-radius: 3px;
     background-color: var(--element2-background-color);
     padding: 4px;
-    /*width: 150px;*/
+    position: sticky;
+    left: 0px;
+    height: 48px;
+    margin-right: 2px;
   }
 
   .frame {
-    height: 50px;;
+    height: 50px;
   }
 
   .layer-head-selected {

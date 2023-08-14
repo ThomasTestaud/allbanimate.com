@@ -30,18 +30,19 @@ export default {
 }*/
 
 :root {
-  --element-background-color: #c6ac8f;
-  --element2-background-color: #eae0d5;
-  --button-color: #fdffb6;
-  --selected-background: #fee440;
-  --selected-border: #ff7d00;
-  --main-background: #5e503f;
-  --border-color: grey;
+  --main-background: #575757;
+  --element-background-color: #828282;
+  --element2-background-color: #676767;
+  --border-color: rgb(37, 37, 37);
+  --button-color: #d8d8d8;
+  --selected-background: #b9a58f;
+  --selected-border: #dd7610;
 }
 
 body {
   background-color: var(--main-background);
   margin: 0px;
+  color: white;
 }
 
 #app {
@@ -50,16 +51,21 @@ body {
 
 button {
   cursor: pointer;
+  transition: background-color 0.1s;
+}
+
+button:active {
+  background-color: var(--selected-border)!important;
 }
 
 .parameter-bar {
-  background-color: rgb(96, 96, 96);
+  background-color: var(--element-background-color);
   display: flex;
-  margin-bottom: 3px;
+  margin-bottom: 8px;
   color: white;
   font-size: 15px;
-  padding: 2px;
-  border-bottom: 1px solid rgb(55, 55, 55);
+  padding: 3px;
+  border-bottom: 2px solid var(--border-color);
 }
 
 .parameter-bar > * + * {
