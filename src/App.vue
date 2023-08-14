@@ -32,10 +32,11 @@ export default {
 :root {
   --element-background-color: #c6ac8f;
   --element2-background-color: #eae0d5;
-  --button-color: #eae0d5;
+  --button-color: #fdffb6;
   --selected-background: #fee440;
   --selected-border: #ff7d00;
   --main-background: #5e503f;
+  --border-color: grey;
 }
 
 body {

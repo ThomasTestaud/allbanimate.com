@@ -747,7 +747,7 @@ export default {
   .tool-section,
   #myCanvas,
   #lower-section {
-    border: 2px solid rgb(57, 57, 57);
+    border: 2px solid var(--border-color);
     border-radius: 3px;
   }
 
@@ -768,13 +768,13 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    max-height: 500px;
+    max-height: 504px;
   }
 
   #tool-parameters {
     display: flex;
     flex-direction: column;
-    border-bottom: 1px solid var(--main-background);
+    border-bottom: 1px solid var(--border-color);
     background-color: var(--element2-background-color);
     border-radius: 3px;
     padding-top: 5px;
@@ -786,7 +786,7 @@ export default {
   }
 
   #tool-parameters div + div {
-    border-top: 1px dashed var(--main-background);
+    border-top: 1px dashed var(--border-color);
   }
 
   #tool-parameters label {
@@ -812,7 +812,7 @@ export default {
     margin: 0.5rem;
     height: 3rem;
     cursor: pointer;
-    border: 2px solid var(--main-background);
+    border: 2px solid var(--border-color);
     border-radius: 3px;
     background-color: var(--button-color);
   }
@@ -824,7 +824,7 @@ export default {
   }
 
   #onion-parameters {
-    border: 1px solid var(--main-background);
+    border: 1px solid var(--border-color);
     background-color: var(--element2-background-color);
     border-radius: 2px;
     display: flex;
@@ -837,7 +837,7 @@ export default {
     width: 40px;
   }
   .onion-layer + .onion-layer {
-    border-left: 1px dashed var(--main-background);
+    border-left: 1px dashed var(--border-color);
   }
   .onion-slider {
     transform: rotate(-90deg);
@@ -887,7 +887,7 @@ export default {
   #frame-parameters input {
     width: 5rem;
     background-color: var(--button-color);
-    border: 1px solid var(--main-background);
+    border: 1px solid var(--border-color);
     border-radius: 3px;
     text-align: center;
   }
@@ -899,7 +899,7 @@ export default {
   #frame-parameters button {
     height: auto;
     background-color: var(--button-color);
-    border: 1px solid var(--main-background);
+    border: 1px solid var(--border-color);
     border-radius: 5px;
   }
 
@@ -931,7 +931,7 @@ export default {
   }
 
   #frame-parameters .params {
-    border: 2px solid rgb(57, 57, 57);
+    border: 2px solid var(--border-color);
     border-bottom: 1px solid var(--element-background-color);
     background-color: var(--element-background-color);
     position: relative;
@@ -951,7 +951,7 @@ export default {
   .semi-selected-frame {
     background-color: var(--button-color);
     border-radius: 3px;
-    border: 2px solid rgb(137, 137, 216);
+    border: 2px solid var(--selected-background);
   }
 
   .empty-selected-frame {
@@ -968,7 +968,7 @@ export default {
   .empty-frame {
     background-color: rgba(182, 182, 217, 0);
     border-radius: 3px;
-    border: 2px solid var(--main-background);
+    border: 2px solid var(--border-color);
   }
 
   .layer {
@@ -977,7 +977,7 @@ export default {
   }
 
   .layer + .layer {
-    border-bottom: 1px dashed var(--main-background);
+    border-bottom: 1px dashed var(--border-color);
   }
 
   .layer-name {
@@ -996,7 +996,7 @@ export default {
     align-items: center;
     justify-content: space-around;
     height: auto;
-    border: 2px solid var(--main-background);
+    border: 2px solid var(--border-color);
     border-radius: 3px;
     background-color: var(--element2-background-color);
     padding: 4px;
