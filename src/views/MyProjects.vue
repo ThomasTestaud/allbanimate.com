@@ -44,6 +44,7 @@
     methods: {
 
       fetchProjectList() {
+
         // Retrieve the JWT token from local storage
         const token = localStorage.getItem('token');
         const config = {
@@ -52,7 +53,7 @@
           }
         };
         //axios.get(`http://localhost:3000/VueJS_projects/allbanimate.com/backend/index.php?route=project-list`, config) //DEV
-        axios.get(`https://allbanimate.com/backend/index.php?route=project-list`, config) //PROD
+        axios.get(process.env.VUE_APP_API_URL + 'index.php?route=project-list', config) //PROD
         
         .then(response => {
           this.projectList = response.data;

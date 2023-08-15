@@ -5,8 +5,6 @@ namespace Controllers;
 
 class ProjectsController
 {
-    
-      
     public function createNewProject($userId)
     {
         $content = file_get_contents("php://input");

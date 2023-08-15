@@ -39,7 +39,7 @@
                 };
 
                 //axios.put('http://localhost:3000/VueJS_projects/allbanimate.com/backend/index.php?route=save-project', requestBody, config) // DEV
-                axios.put('https://allbanimate.com/backend/index.php?route=save-project', requestBody, config) //PROD
+                axios.put(process.env.VUE_APP_API_URL + 'index.php?route=save-project', requestBody, config) //PROD
                     
                 .then(response => {
                     

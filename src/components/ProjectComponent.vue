@@ -3,6 +3,7 @@
   <div class="parameter-bar">
     <router-link to="/my-projects">My projects</router-link>
     <BtnSaveProject :projectData="{calkLayers,calkLayersEverCount,frameRate,drawingToolsData,memoryColorPalette,displayedFrame,selectedCalk,lineWidth,onionValue,onionLayerState,}"></BtnSaveProject>
+    <BtnDownload/>
   </div>
     <div id="upper-section">
       <div class="tool-section">
@@ -199,11 +200,13 @@
 <script>
 
 import BtnSaveProject from '../components/BtnSaveProject.vue';
+import BtnDownload from '../components/BtnDownload.vue';
 
 export default {
   name: 'projectComponent',
   components: {
     BtnSaveProject,
+    BtnDownload,
   },
   props: {
     projectData: Object,

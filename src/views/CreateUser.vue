@@ -52,7 +52,7 @@
         };
         
         //axios.post('http://localhost:3000/VueJS_projects/allbanimate.com/backend/index.php?route=user', requestBody) // DEV
-        axios.post('https://allbanimate.com/backend/index.php?route=user', requestBody) // PROD
+        axios.post(process.env.VUE_APP_API_URL + 'index.php?route=user', requestBody) // PROD
         .then(response => {
 
           if(response.data.auth){

@@ -42,7 +42,7 @@
           }
         };
         //axios.get(`http://localhost:3000/VueJS_projects/allbanimate.com/backend/index.php?route=project&projectName=${this.$route.params.name}`, config) //DEV
-        axios.get(`https://allbanimate.com/backend/index.php?route=project&projectName=${this.$route.params.name}`, config) //PROD
+        axios.get(process.env.VUE_APP_API_URL + `index.php?route=project&projectName=${this.$route.params.name}`, config) //PROD
         .then(response => {
 
           this.response = JSON.parse(response.data.data);

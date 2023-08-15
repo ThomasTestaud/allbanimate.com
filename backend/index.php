@@ -37,6 +37,14 @@ exit;
             $controller = new Controllers\UsersController();
             $controller->createUser();
         break;
+
+        case 'download-project':
+            $decoded = $authController->authenticate(); // Authenticate the user before processing the request
+            $userId = $decoded->userId->id; // Extract userId
+
+            $controller = new Controllers\ConverterController();
+            $controller->covertToMP4($userId);
+        break;
     }
 
 } elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
@@ -45,7 +53,6 @@ exit;
 
         case 'project-list':
             $decoded = $authController->authenticate(); // Authenticate the user before processing the request
-
             $userId = $decoded->userId->id; // Extract userId
 
             $controller = new Controllers\ProjectsController();
