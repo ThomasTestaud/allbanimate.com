@@ -1,6 +1,6 @@
 <template>
  
-  <div @click="stop" class="parameter-bar">
+  <div class="parameter-bar">
     <router-link to="/my-projects">My projects</router-link>
     <BtnSaveProject :projectData="{calkLayers,calkLayersEverCount,frameRate,drawingToolsData,memoryColorPalette,displayedFrame,selectedCalk,lineWidth,onionValue,onionLayerState,}"></BtnSaveProject>
   </div>
