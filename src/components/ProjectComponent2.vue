@@ -1,6 +1,6 @@
 <template>
  
-  <div @click="stop" class="parameter-bar">
+  <div class="parameter-bar">
     <router-link to="/my-projects">My projects</router-link>
     <BtnSaveProject :projectData="{calkLayers,calkLayersEverCount,frameRate,drawingToolsData,memoryColorPalette,displayedFrame,selectedCalk,lineWidth,onionValue,onionLayerState,}"></BtnSaveProject>
   </div>
@@ -53,8 +53,16 @@
 
       <div class="canvas-container">
 
+
+
+        <PlayerImg :img="testImg"/>
+        <img :src="testImg" alt="testt">
+
+
+
+
         <canvas ref="canvas" id="myCanvas" width="800" height="500"
-        @mousedown="handleMouseDown" @mouseup="handleMouseUp" @mouseleave="handleMouseUp" @mousemove="handleMouseMove"></canvas>
+        @mousedown="handleMouseDown" @mouseup="handleMouseUp" @mouseleave="penDown = false" @mousemove="handleMouseMove"></canvas>
         
         <div id="video-controls">
           <button @click="previousFrame"><img src="@/assets/leftskip.png" alt="leftskip"></button>
@@ -198,19 +206,36 @@
 
 <script>
 
-import BtnSaveProject from '../components/BtnSaveProject.vue';
+import BtnSaveProject from './BtnSaveProject.vue';
+import PlayerImg from './PlayerImg.vue';
 
 export default {
   name: 'projectComponent',
   components: {
     BtnSaveProject,
+    PlayerImg
   },
   props: {
     projectData: Object,
   },
   data() {
     return {
-      calkLayers: this.projectData.calkLayers,
+      calkLayers: [
+            {
+              "code": ["", "", "", ""],
+              "img": ["", "", "", ""],
+              "displayed": true,
+              "onion": true,
+              "name": "Layer 1"
+            },
+            {
+              "code": ["", "", "", ""],
+              "img": ["", "", "", ""],
+              "displayed": true,
+              "onion": true,
+              "name": "Layer 2"
+            }
+          ],
       calkLayersEverCount: this.projectData.calkLayersEverCount,
       frameRate: this.projectData.frameRate,
       drawingToolsData: this.projectData.drawingToolsData,
@@ -221,6 +246,7 @@ export default {
       onionValue: this.projectData.onionValue,
       onionLayerState: this.projectData.onionLayerState,
       
+      testImg: null,
       interval: null,
       canvas: null,
       canvasData: null,
@@ -424,6 +450,9 @@ export default {
 
     play() {
       this.stop();
+
+      this.convertCanvasToImg();
+
       this.videoBeingPlayed = true;
       this.interval = setInterval(() => {
         this.nextFrame();
@@ -446,22 +475,58 @@ export default {
       return this.returnLastDrawnedFrameFrom(layer, frame-1);
     },
 
-    readCurrentFrame() {
-      if (this.videoBeingPlayed) {
+    convertCanvasToImg() {
+      /*
+      const test = this.canvas.toDataURL('image/png');
+      console.log(test.length);
+      console.log(this.calkLayers[this.selectedCalk].code[this.displayedFrame].length);
+      this.calkLayers[this.selectedCalk].img[this.displayedFrame] = test;
+      this.testImg = test;
+      
+      // Clear the entire canvas
+      const canvas = this.$refs.canvas;
+      const context = canvas.getContext('2d');
+      context.clearRect(0, 0, canvas.width, canvas.height);   
+      */
+
+     
+      //for each frame in the project
+      this.calkLayers[0].code.forEach((frameElement, frameIndex) => {
         const canvas = this.$refs.canvas;
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        // Get the center coordinates of the canvas
-        const centerX = canvas.width / 2;
-        const centerY = canvas.height / 2;
-        console.log(centerX + centerY);
-        
-        this.calkLayers.forEach((layer, index) => {
-          if(layer.displayed) {
-            eval(this.returnLastDrawnedFrameFrom(index, this.displayedFrame));
+        //for each layer in this frame
+        this.calkLayers.forEach((layerElement, layerIndex) => {
+          //display the code drawing instructions canvas onto the canvas
+          if(layerElement.displayed) {
+            eval(this.returnLastDrawnedFrameFrom(layerIndex, this.displayedFrame));
+            console.log('render layer')
           }
-        });
 
+        });
+        //convert the canvas to png
+        const test = this.canvas.toDataURL('image/png');
+        console.log('convert')
+        //save the png data in the array
+        this.calkLayers[0].img[frameIndex] = test; //calkLayers[0] cause for now no layers with img tech
+        //replace the code drawing instructions by the img reference
+      });
+
+      console.log(this.calkLayers[0].img);
+    },
+
+    readCurrentFrame() {
+      
+      if (this.videoBeingPlayed) {
+        
+        this.testImg = this.calkLayers[0].img[this.displayedFrame];
+        //console.log('read: '+ this.testImg);
+        console.log(this.displayedFrame);
+        //this.calkLayers.forEach((layer, index) => {
+        //  if(layer.displayed) {
+        //    eval(this.returnLastDrawnedFrameFrom(index, this.displayedFrame));
+        //  }
+        //});
       } else {
         this.displayOnionLayers();
       }

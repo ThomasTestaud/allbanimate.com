@@ -31,7 +31,7 @@ class ProjectsController
               "name": "Layer 2"
             }
           ],
-          "calkLayersEverCount": 4,
+          "calkLayersEverCount": 2,
           "frameRate": 6,
           "drawingToolsData": {
             "currentTool": false,

@@ -42,7 +42,6 @@ export default {
 body {
   background-color: var(--main-background);
   margin: 0px;
-  color: white;
 }
 
 #app {
@@ -73,7 +72,7 @@ button:active {
 }
 
 .parameter-bar > *:hover {
-  color: rgb(147, 147, 205);
+  color: var(--selected-background);
 }
 .parameter-bar a {
   text-decoration: none;
