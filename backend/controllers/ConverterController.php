@@ -6,7 +6,7 @@ require('config/config.php');
 
 class ConverterController
 {
-    public function createFolderArea($userId)
+    public function uploadProject($userId)
     {
         $directory = "src/convert_area/" . $userId;
 
@@ -17,16 +17,13 @@ class ConverterController
             } else {
                 echo "Failed to create folder.";
             }
-        } else {
-            echo "Folder already exists.";
         }
-    }
 
-    public function addPhotoToFolder($userId)
-    {   
-        $directory = "src/convert_area/" . $userId;
-
-        
+        if (file_exists($directory)) {
+            
+        } else {
+            echo "Error, user's folder does not exist";
+        }
     }
 
     public function covertToMP4($userId)
