@@ -29,14 +29,33 @@
         },
 
         mounted() {
-            console.log(this.$refs.rendercanvas);
+            
         },
   
         methods: {
+            handleServerTransaction() {
+                this.progressWindow = true;
+
+                this.$nextTick(() => {
+                    //console.log(this.calkLayers[0].code);
+                    console.log(this.$refs.rendercanvas);
+                    
+                    
+                    this.calkLayers[0].code.forEach((frame, index) => {
+                        //console.log(this.renderFrame(index));
+                        this.uploadImgs(this.renderFrame(index));
+                    });
+                });
+
+
+                
+
+            },
+
             renderFrame(indexFrame) {
                 
-                //const canvas = this.$refs.test;
-                /*
+                const canvas = this.$refs.rendercanvas;
+                
                 const ctx = canvas.getContext('2d');
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 // Get the center coordinates of the canvas
@@ -52,19 +71,7 @@
                 
                 //console.log(this.canvas.toDataURL('image/png'));
                 return canvas.toDataURL('image/png');
-                */
-            },
-
-            handleServerTransaction() {
-                this.progressWindow = true;
-                //console.log(this.calkLayers[0].code);
                 
-                
-                this.calkLayers[0].code.forEach((frame, index) => {
-                    console.log(this.renderFrame(index));
-                    //this.uploadImgs(this.renderFrame(index));
-                });
-
             },
 
             uploadImgs(dataURL) {
