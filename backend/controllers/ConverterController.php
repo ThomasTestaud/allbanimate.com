@@ -11,7 +11,7 @@ class ConverterController
         $directory = "src/convert_area/" . $userId;
 
         // Create a folder for that user if it does not already exist
-        if (!file_exists($directory)) {
+        if (!is_dir($directory)) {
             if (mkdir($directory, 0777, true)) {
                 echo "Folder created successfully.";
             } else {
@@ -19,14 +19,40 @@ class ConverterController
             }
         }
 
-        if (file_exists($directory)) {
-            
+        if (is_dir($directory)) {
+
+            $json_data = file_get_contents('php://input');
+            $data = json_decode($json_data, true);
+
+            if (isset($data['imageData'])) {
+                
+                $imageData = $data['imageData'];
+                // Remove the data type part (e.g., "data:image/png;base64,")
+                $imageData = str_replace('data:image/png;base64,', '', $imageData);
+                // Convert the base64-encoded data to binary data
+                $imageData = base64_decode($imageData);
+
+                // Generate a unique filename for the uploaded image
+                $filename = uniqid() . '.png';
+
+                // Combine the upload directory path with the filename
+                $filePath = $directory . '/' . $filename;
+
+                // Save the image data to the specified file
+                if (file_put_contents($filePath, $imageData)) {
+                    echo 'File uploaded successfully.';
+                } else {
+                    echo 'Error uploading file.';
+                }
+            }else {
+                echo 'No imageData';
+            }
         } else {
             echo "Error, user's folder does not exist";
         }
     }
 
-    public function covertToMP4($userId)
+    public function covertTo($userId)
     {
         $content = file_get_contents("php://input");
         $data = json_decode($content, true);

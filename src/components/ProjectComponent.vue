@@ -3,7 +3,7 @@
   <div class="parameter-bar">
     <router-link to="/my-projects">My projects</router-link>
     <BtnSaveProject :projectData="{calkLayers,calkLayersEverCount,frameRate,drawingToolsData,memoryColorPalette,displayedFrame,selectedCalk,lineWidth,onionValue,onionLayerState,}"></BtnSaveProject>
-    <BtnDownload/>
+    <BtnDownload :projectData="{calkLayers,frameRate}"/>
   </div>
     <div id="upper-section">
       <div class="tool-section">
@@ -450,6 +450,7 @@ export default {
     },
 
     readCurrentFrame() {
+      //console.log(this.canvas.toDataURL('image/png'));
       if (this.videoBeingPlayed) {
         const canvas = this.$refs.canvas;
         const ctx = canvas.getContext('2d');

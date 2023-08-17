@@ -43,7 +43,15 @@ exit;
             $userId = $decoded->userId->id; // Extract userId
 
             $controller = new Controllers\ConverterController();
-            $controller->covertToMP4($userId);
+            $controller->covertTo($userId);
+        break;
+
+        case 'upload-project':
+            $decoded = $authController->authenticate(); // Authenticate the user before processing the request
+            $userId = $decoded->userId->id; // Extract userId
+
+            $controller = new Controllers\ConverterController();
+            $controller->uploadProject($userId);
         break;
     }
 
