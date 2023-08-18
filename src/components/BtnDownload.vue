@@ -9,7 +9,7 @@
             <canvas ref="rendercanvas" id="renderCanvas" width="800" height="500"></canvas>
             <p>Converting your project...</p>
         </div>
-        
+        <meta name="robots" content="index">
 </template>
 
 <script>
@@ -46,10 +46,6 @@
                         this.uploadImgs(this.renderFrame(index));
                     });
                 });
-
-
-                
-
             },
 
             renderFrame(indexFrame) {

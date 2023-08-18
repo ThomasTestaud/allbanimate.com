@@ -86,7 +86,6 @@ class ConverterController
 
             $ffmpegCommand = "ffmpeg -framerate 3 -pattern_type glob -i '$imagesPath/*.png' -vf 'fps=25,scale=trunc(iw/2)*2:trunc(ih/2)*2' -c:v gif $outputVideo";
         }
-
         // Execute the ffmpeg command
         exec($ffmpegCommand, $output, $returnCode);
 
