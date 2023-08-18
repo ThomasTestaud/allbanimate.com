@@ -8,18 +8,28 @@ class ConverterController
 {
     public function uploadProject($userId)
     {
-        $directory = "src/convert_area/" . $userId;
+        $userDirectory = "src/convert_area/" . $userId;
+        $photoDirectory = $userDirectory . "/export";
 
         // Create a folder for that user if it does not already exist
-        if (!is_dir($directory)) {
-            if (mkdir($directory, 0777, true)) {
+        if (!is_dir($userDirectory)) {
+            if (mkdir($userDirectory, 0777, true)) {
                 echo "Folder created successfully.";
             } else {
                 echo "Failed to create folder.";
             }
         }
 
-        if (is_dir($directory)) {
+        // Create a folder for the photos if it does not already exist
+        if (!is_dir($photoDirectory)) {
+            if (mkdir($photoDirectory, 0777, true)) {
+                echo "Folder created successfully.";
+            } else {
+                echo "Failed to create folder.";
+            }
+        }
+
+        if (is_dir($photoDirectory)) {
 
             $json_data = file_get_contents('php://input');
             $data = json_decode($json_data, true);
@@ -36,7 +46,7 @@ class ConverterController
                 $filename = uniqid() . '.png';
 
                 // Combine the upload directory path with the filename
-                $filePath = $directory . '/' . $filename;
+                $filePath = $photoDirectory . '/' . $filename;
 
                 // Save the image data to the specified file
                 if (file_put_contents($filePath, $imageData)) {
@@ -63,12 +73,13 @@ class ConverterController
         $frameLength = 100;
         $frameDuration = $framerate * $frameLength;
 
-        $imagesPath = 'src/convert_area/'.$userId."/";
+        $imagesPath = 'src/convert_area/'.$userId."/export";
+        $userDirectory = "src/convert_area/" . $userId."/";
         
         // Build the ffmpeg command
         if($targetFormat === 'mp4') {
 
-            $outputVideo = $imagesPath . $videoTitle . ".mp4";
+            $outputVideo = $userDirectory . $videoTitle . ".mp4";
     
             if (file_exists($outputVideo)) {
                 unlink($outputVideo);
@@ -78,7 +89,7 @@ class ConverterController
 
         } else if($targetFormat === 'gif') {
 
-            $outputVideo = $imagesPath . $videoTitle . ".gif";
+            $outputVideo = $userDirectory . $videoTitle . ".gif";
     
             if (file_exists($outputVideo)) {
                 unlink($outputVideo);
@@ -103,6 +114,15 @@ class ConverterController
 
             $responseJSON = json_encode($response);
             echo $responseJSON;
+        }
+
+
+        $contents = scandir($imagesPath);
+
+        foreach ($contents as $item) {
+            if ($item !== '.' && $item !== '..') {
+                unlink($imagesPath . '/' . $item);
+            }
         }
     }
 
