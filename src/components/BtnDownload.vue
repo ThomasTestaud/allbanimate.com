@@ -1,7 +1,7 @@
 <template>
-        <div @click="handleDropDown">
+        <div @click="handleDropDown" >
             Download
-            <div v-if="dropDown" class="drop-down">
+            <div v-if="dropDown" class="drop-down" >
                 <div @click="handleServerTransaction('mp4')">
                     Download Project as MP4
                 </div>
