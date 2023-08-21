@@ -1,8 +1,12 @@
   <template>
+    <div v-if="connected" class="parameter-bar">
+      <router-link to="/my-projects">My projects</router-link>
+    </div>
+
     <div class="welcome-container">
       <WelcomeCard/>
 
-      <div v-if="login" class="connect-card">
+      <div v-if="login && !connected" class="connect-card">
         <img src="@/assets/allba.png" alt="Allbanimate logo">
         <p>{{ errors }}</p>
         <label for="username">Username</label><br>
@@ -16,7 +20,7 @@
         <a @click="login = false" href="#">Create a new account</a>
       </div>
 
-      <div v-else class="connect-card">
+      <div v-if="!login && !connected" class="connect-card">
         <img src="@/assets/allba.png" alt="Allbanimate logo">
         <p>{{ errors }}</p>
         <label for="">Username</label><br>
@@ -49,14 +53,23 @@
         errors: "",
         pageName: "Login Page",
         login: true,
+        connected: false,
       };
     },
 
     components: {
       WelcomeCard
     },
+
+    mounted() {
+      if(localStorage.getItem("token") !== "null" && localStorage.getItem("token") !== null && localStorage.getItem("token") !== undefined) {
+        this.connected = true;
+      }
+
+    },
   
     methods: {
+
       connectAsJohnDoe() {
         const requestBody = {
             userName: "John Doe",

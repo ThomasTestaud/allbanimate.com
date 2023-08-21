@@ -1,7 +1,7 @@
 <template>
-        <button @click="deconnect"  class="btn-deconnexion">
+        <div @click="deconnect"  class="btn-deconnexion">
             Deconnexion
-        </button>
+        </div>
 </template>
 
 <script>
