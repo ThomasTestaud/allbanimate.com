@@ -109,7 +109,7 @@
           if(response.data.auth){
             const token = response.data.token;
             localStorage.setItem("token", token); // Save the JWT token in local storage
-            this.$router.push({ path: `/` });
+            this.$router.push({ path: `/my-projects` });
           }else{
             this.errors = "Username or password incorrect.";
           }
@@ -144,7 +144,7 @@
           if(response.data.auth){
             const token = response.data.token;
             localStorage.setItem("token", token); // Save the JWT token in local storage
-            this.$router.push({ path: `/` });
+            this.$router.push({ path: `/my-projects` });
           }else{
             this.errors = "This username already exist.";
           }
