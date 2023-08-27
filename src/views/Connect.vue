@@ -77,7 +77,7 @@
         };
 
         //axios.post('http://localhost:3000/VueJS_projects/allbanimate.com/backend/index.php?route=connect', requestBody) //DEV
-        axios.post('https://allbanimate.com/backend/index.php?route=connect', requestBody) //PROD
+        axios.post(process.env.VUE_APP_API_URL + 'index.php?route=connect', requestBody) //PROD
             .then(response => {
               console.log(response.data.token);
 

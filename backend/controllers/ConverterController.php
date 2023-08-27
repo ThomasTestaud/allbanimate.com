@@ -69,7 +69,7 @@ class ConverterController
         
         $videoTitle = $data['projectName'];
         $targetFormat = $data['targetFormat'];
-        $framerate = 6;
+        $framerate = $data['projectData']['frameRate'];
         $frameLength = 100;
         $frameDuration = $framerate * $frameLength;
 
@@ -85,7 +85,7 @@ class ConverterController
                 unlink($outputVideo);
             }
 
-            $ffmpegCommand = "ffmpeg -framerate 3 -pattern_type glob -i '$imagesPath/*.png' -vf 'fps=25' -c:v libx264 -pix_fmt yuv420p -t $frameDuration $outputVideo";
+            $ffmpegCommand = "ffmpeg -framerate ". $framerate ." -pattern_type glob -i '$imagesPath/*.png' -vf 'fps=25' -c:v libx264 -pix_fmt yuv420p -t $frameDuration $outputVideo";
 
         } else if($targetFormat === 'gif') {
 
@@ -95,7 +95,7 @@ class ConverterController
                 unlink($outputVideo);
             }
 
-            $ffmpegCommand = "ffmpeg -framerate 3 -pattern_type glob -i '$imagesPath/*.png' -vf 'fps=25,scale=trunc(iw/2)*2:trunc(ih/2)*2' -c:v gif $outputVideo";
+            $ffmpegCommand = "ffmpeg -framerate ". $framerate ." -pattern_type glob -i '$imagesPath/*.png' -vf 'fps=25,scale=trunc(iw/2)*2:trunc(ih/2)*2' -c:v gif $outputVideo";
         }
         // Execute the ffmpeg command
         exec($ffmpegCommand, $output, $returnCode);
