@@ -146,7 +146,14 @@
             localStorage.setItem("token", token); // Save the JWT token in local storage
             this.$router.push({ path: `/my-projects` });
           }else{
-            this.errors = "This username already exist.";
+            console.log(response.data.variables);
+            this.errors = "";
+            if(response.data.variables.emailExist !== false) {
+              this.errors += "This email address already has an account.\n";
+            }
+            if(response.data.variables.usernameExist !== false) {
+              this.errors += "This username already exist.\n";
+            }
           }
 
         })

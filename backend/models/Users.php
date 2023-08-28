@@ -18,13 +18,14 @@ class Users extends Database
         return $query->fetch();
     }
 
-    public function createUser($userName, $userPassword)
+    public function createUser($userName, $email, $userPassword)
     {
         $req = "INSERT INTO `users`(`username`, `password`, `email`) 
-                VALUES ( :userName, :userPassword, 'toto@toto.com')";
+                VALUES ( :userName, :userPassword, :email)";
 
         $params = [
             "userName" => $userName,
+            "email" => $email,
             "userPassword" => $userPassword
         ];
 
@@ -43,6 +44,19 @@ class Users extends Database
 
         $params = [
             "userName" => $userName
+        ];
+
+        $query = $this->bdd->prepare($req);
+        $query->execute($params);
+        return $query->fetch();
+    }
+
+    public function emailExist($email)
+    {
+        $req = "SELECT email FROM `users` WHERE email = :email";
+
+        $params = [
+            "email" => $email
         ];
 
         $query = $this->bdd->prepare($req);

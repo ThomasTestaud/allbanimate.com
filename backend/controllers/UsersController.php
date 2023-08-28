@@ -71,17 +71,19 @@ class UsersController
         $data = json_decode($content, true);
 
         $userName = $data['userName'];
+        $email = 'toto@toto.com';
         $userPassword = $data['userPassword'];
 
         $hashedPassword = password_hash($userPassword, PASSWORD_DEFAULT);
 
         // Check if username don't already exists
         $model = new \Models\Users();
-        $result = $model->usernameExist($userName);
+        $usernameExist = $model->usernameExist($userName);
+        $emailExist = $model->emailExist($email);
 
-        if (!$result) { // If the DDB returns nothing (false)
+        if (!$usernameExist && !$emailExist) { // If the DDB returns nothing (false)
 
-            $result = $model->createUser($userName, $hashedPassword); // Create the account
+            $result = $model->createUser($userName, $email, $hashedPassword); // Create the account
 
             $result = ['id' => $result]; // Format same as other methods
 
@@ -89,7 +91,10 @@ class UsersController
             $authController->connectUser($userName, $userPassword, $result);
         } else {
             header('Content-Type: application/json');
-            echo json_encode(array('auth' => false));
+            echo json_encode(array('auth' => false, 'variables' => [
+                'usernameExist' => $usernameExist,
+                'emailExist' => $emailExist
+            ]));
             exit;
         }
     }
