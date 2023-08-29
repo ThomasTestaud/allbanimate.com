@@ -65,6 +65,9 @@ button:active {
   font-size: 15px;
   padding: 3px;
   border-bottom: 2px solid var(--border-color);
+  position: sticky;
+  top: 0px;
+  z-index: 3;
 }
 
 .parameter-bar > * + * {

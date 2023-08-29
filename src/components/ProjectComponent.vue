@@ -13,7 +13,7 @@
             <input type="range" min="1" max="150" v-model="drawingToolsData.currentSize">
           </div>
           <div v-if="drawingToolsData.currentTool.opacity === true">
-            <label for="">Opacity:</label>
+            <label for="">Opacity: {{ drawingToolsData.currentOpacity/100 }}</label>
             <input type="range" min="1" max="100" v-model="drawingToolsData.currentOpacity">
           </div>
           <div v-if="drawingToolsData.currentTool.particleSize === true">
@@ -1070,11 +1070,23 @@ export default {
   }
 
 
-  @media (max-width: 1200px) {
-
+  @media (max-width: 1220px) {
     #upper-section {
-      align-items: center;
-      flex-direction: column;
+      flex-wrap: wrap;
+      justify-content: space-evenly;
+    }
+    
+  
+    #upper-section > div:nth-child(1) {
+      order: 1; 
+    }
+
+    #upper-section > div:nth-child(2) {
+      order: 3; 
+    }
+
+    #upper-section > div:nth-child(3) {
+      order: 2;
     }
 
   }
