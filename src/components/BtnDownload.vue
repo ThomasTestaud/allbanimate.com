@@ -94,7 +94,7 @@
                     this.progressMessage = "We're sorry, there has been an error...";
                     setTimeout(() => {
                         this.progressWindow = false;
-                    }, 2000);
+                    }, 3000);
                 });
             },
 
@@ -115,7 +115,7 @@
                     headers: {
                         Authorization: `Bearer ${token}`
                     },
-                    timeout: 30000,
+                    timeout: 300000,
                 };
 
                 axios.post(process.env.VUE_APP_API_URL + 'index.php?route=download-project', requestBody, config)
@@ -145,7 +145,7 @@
                     this.progressMessage = "We're sorry, there has been an error...";
                     setTimeout(() => {
                         this.progressWindow = false;
-                    }, 2000);
+                    }, 10000);
                 });
             },
 

@@ -4,6 +4,7 @@
     <router-link to="/my-projects">My projects</router-link>
     <BtnSaveProject :projectData="{calkLayers,calkLayersEverCount,frameRate,drawingToolsData,memoryColorPalette,displayedFrame,selectedCalk,lineWidth,onionValue,onionLayerState,}"></BtnSaveProject>
     <BtnDownload :projectData="{calkLayers,frameRate}"/>
+    <NotifSave/>
   </div>
     <div id="upper-section">
       <div class="tool-section">
@@ -201,12 +202,14 @@
 
 import BtnSaveProject from '../components/BtnSaveProject.vue';
 import BtnDownload from '../components/BtnDownload.vue';
+import NotifSave from '../components/NotifSave.vue';
 
 export default {
   name: 'projectComponent',
   components: {
     BtnSaveProject,
     BtnDownload,
+    NotifSave,
   },
   props: {
     projectData: Object,

@@ -22,14 +22,12 @@
         methods: {
 
             saveProject() {
-                const projectName = this.$route.params.name; // Get the graph ID from the route
+                const projectName = this.$route.params.name;
 
                 const requestBody = {
                     projectName: projectName,
                     projectData: this.projectData
                 };
-
-                //console.log(requestBody);
                 
                 const token = localStorage.getItem('token');
                 const config = {
@@ -38,7 +36,6 @@
                     }
                 };
 
-                //axios.put('http://localhost:3000/VueJS_projects/allbanimate.com/backend/index.php?route=save-project', requestBody, config) // DEV
                 axios.put(process.env.VUE_APP_API_URL + 'index.php?route=save-project', requestBody, config) //PROD
                     
                 .then(response => {

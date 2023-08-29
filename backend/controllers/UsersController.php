@@ -71,7 +71,7 @@ class UsersController
         $data = json_decode($content, true);
 
         $userName = $data['userName'];
-        $email = 'toto@toto.com';
+        $email = $data['email'];
         $userPassword = $data['userPassword'];
 
         $hashedPassword = password_hash($userPassword, PASSWORD_DEFAULT);

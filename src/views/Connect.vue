@@ -9,7 +9,7 @@
       <div v-if="login && !connected" class="connect-card">
         <img src="@/assets/allba.png" alt="Allbanimate logo">
         <p>{{ errors }}</p>
-        <label for="username">Username</label><br>
+        <label for="username">Email or Username</label><br>
         <input type="text" name="username" v-model="username"><br>
         <label for="password">Password</label><br>
         <input type="password" name="password" v-model="password"><br>
@@ -25,6 +25,8 @@
         <p>{{ errors }}</p>
         <label for="">Username</label><br>
         <input type="text" v-model="username"><br>
+        <label for="">Email</label><br>
+        <input type="text" v-model="email"><br>
         <label for="">Password</label><br>
         <input type="password" v-model="password"><br>
         <label for="">Confirm Password</label><br>
@@ -50,6 +52,7 @@
       return {
         username: "",
         password: "",
+        email: "",
         errors: "",
         pageName: "Login Page",
         login: true,
@@ -134,7 +137,8 @@
 
         const requestBody = {
             userName: this.username,
-            userPassword: this.password
+            userPassword: this.password,
+            email: this.email,
         };
         
         //axios.post('http://localhost:3000/VueJS_projects/allbanimate.com/backend/index.php?route=user', requestBody) // DEV

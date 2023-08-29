@@ -7,7 +7,7 @@ class Users extends Database
 {
     public function connectUser($userName) //Return userId and hashedPassword
     {
-        $req = "SELECT id as userId, password as hashedPassword FROM `users` WHERE username = :userName";
+        $req = "SELECT id as userId, password as hashedPassword FROM `users` WHERE username = :userName OR email = :userName";
 
         $params = [
             "userName" => $userName
