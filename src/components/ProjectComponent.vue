@@ -4,17 +4,16 @@
     <router-link to="/my-projects">My projects</router-link>
     <BtnSaveProject :projectData="{calkLayers,calkLayersEverCount,frameRate,drawingToolsData,memoryColorPalette,displayedFrame,selectedCalk,lineWidth,onionValue,onionLayerState,}"></BtnSaveProject>
     <BtnDownload :projectData="{calkLayers,frameRate}"/>
-    <NotifSave/>
   </div>
     <div id="upper-section">
       <div class="tool-section">
         <div id="tool-parameters">
           <div v-if="drawingToolsData.currentTool.size === true">
-            <label for="">Size: </label>
+            <label for="">Size: {{ drawingToolsData.currentSize }}</label>
             <input type="range" min="1" max="150" v-model="drawingToolsData.currentSize">
           </div>
           <div v-if="drawingToolsData.currentTool.opacity === true">
-            <label for="">Opacity: </label>
+            <label for="">Opacity:</label>
             <input type="range" min="1" max="100" v-model="drawingToolsData.currentOpacity">
           </div>
           <div v-if="drawingToolsData.currentTool.particleSize === true">
@@ -202,14 +201,12 @@
 
 import BtnSaveProject from '../components/BtnSaveProject.vue';
 import BtnDownload from '../components/BtnDownload.vue';
-import NotifSave from '../components/NotifSave.vue';
 
 export default {
   name: 'projectComponent',
   components: {
     BtnSaveProject,
     BtnDownload,
-    NotifSave,
   },
   props: {
     projectData: Object,
@@ -231,6 +228,7 @@ export default {
       canvas: null,
       canvasData: null,
       penDown: false,
+      lastPenPosition: null,
       videoBeingPlayed: false,
       renamingLayer: false,
       toolsMetaData: {
@@ -543,7 +541,8 @@ export default {
         }
 
         if (this.drawingToolsData.currentTool === this.toolsMetaData.crayon) {
-          const newStroke = `
+
+          let newStroke = `
             ctx.fillStyle = "${this.drawingToolsData.currentColor}";
             ctx.strokeStyle = "${this.drawingToolsData.currentColor}";
             ctx.beginPath();
@@ -551,6 +550,16 @@ export default {
             ctx.fill();
             ctx.closePath();
             `;
+
+          if(this.lastPenPosition !== null) {
+            newStroke += `ctx.lineWidth = ${this.drawingToolsData.currentSize*2};
+                          ctx.beginPath();
+                          ctx.moveTo(${this.lastPenPosition[0]}, ${this.lastPenPosition[1]});
+                          ctx.lineTo(${mouseX}, ${mouseY});
+                          ctx.stroke();`;
+          }
+
+          this.lastPenPosition = [mouseX, mouseY];
 
           this.calkLayers[this.selectedCalk].code[this.displayedFrame] += newStroke;
           this.readNewStroke(newStroke);
@@ -671,6 +680,7 @@ export default {
 
     handleMouseUp() {
       this.penDown = false;
+      this.lastPenPosition = null;
     },
 
     setColor(color) {
