@@ -72,7 +72,7 @@
     },
   
     methods: {
-
+      
       connectAsJohnDoe() {
         const requestBody = {
             userName: "John Doe",
