@@ -29,18 +29,18 @@
         </div>
 
         <div class="tool-section-left">
-          <button v-if="drawingToolsData.currentTool === toolsMetaData.crayon" class="selected"><img src="@/assets/sharpy.png" alt="crayon"></button>
-          <button v-else @click="selectTool(toolsMetaData.crayon)"><img src="@/assets/sharpy.png" alt="crayon"></button>
-          <button v-if="drawingToolsData.currentTool === toolsMetaData.spray" class="selected"><img src="@/assets/spray.png" alt="spray"></button>
-          <button v-else @click="selectTool(toolsMetaData.spray)"><img src="@/assets/spray.png" alt="spray"></button>          
-          <button v-if="drawingToolsData.currentTool === toolsMetaData.three" class="selected"><img src="@/assets/crayon.png" alt="dots"></button>
-          <button v-else @click="selectTool(toolsMetaData.three)"><img src="@/assets/crayon.png" alt="spray"></button>
-          <button v-if="drawingToolsData.currentTool === toolsMetaData.scissors" class="selected"><img src="@/assets/scissors.png" alt="dots"></button>
-          <button v-else @click="selectTool(toolsMetaData.scissors)"><img src="@/assets/scissors.png" alt="spray"></button>
-          <button v-if="drawingToolsData.currentTool === toolsMetaData.eraser" class="selected"><img src="@/assets/eraser.png" alt="eraser"></button>
-          <button v-else @click="selectTool(toolsMetaData.eraser)"><img src="@/assets/eraser.png" alt="spray"></button>          
-          <button v-if="drawingToolsData.currentTool === toolsMetaData.four" class="selected"><img src="@/assets/bucket.png" alt="bucket"></button>
-          <button v-else @click="selectTool(toolsMetaData.four)"><img src="@/assets/bucket.png" alt="spray"></button>   
+          <button v-if="drawingToolsData.currentTool === toolsMetaData.crayon" class="selected"><img src="@/assets/pen-fancy-solid.svg" alt="pen"></button>
+          <button v-else @click="selectTool(toolsMetaData.crayon)"><img src="@/assets/pen-fancy-solid.svg" alt="pen"></button>
+          <button v-if="drawingToolsData.currentTool === toolsMetaData.spray" class="selected"><img src="@/assets/spray-can-solid.svg" alt="spray-can"></button>
+          <button v-else @click="selectTool(toolsMetaData.spray)"><img src="@/assets/spray-can-solid.svg" alt="spray-can"></button>          
+          <button v-if="drawingToolsData.currentTool === toolsMetaData.three" class="selected"><img src="@/assets/pen-solid.svg" alt="pen"></button>
+          <button v-else @click="selectTool(toolsMetaData.three)"><img src="@/assets/pen-solid.svg" alt="pen"></button>
+          <button v-if="drawingToolsData.currentTool === toolsMetaData.scissors" class="selected"><img src="@/assets/paintbrush-solid.svg" alt="paintbrush"></button>
+          <button v-else @click="selectTool(toolsMetaData.scissors)"><img src="@/assets/paintbrush-solid.svg" alt="paintbrush"></button>
+          <button v-if="drawingToolsData.currentTool === toolsMetaData.eraser" class="selected"><img src="@/assets/eraser-solid.svg" alt="eraser"></button>
+          <button v-else @click="selectTool(toolsMetaData.eraser)"><img src="@/assets/eraser-solid.svg" alt="eraser"></button>          
+          <button v-if="drawingToolsData.currentTool === toolsMetaData.four" class="selected"><img src="@/assets/fill-drip-solid.svg" alt="bucket"></button>
+          <button v-else @click="selectTool(toolsMetaData.four)"><img src="@/assets/fill-drip-solid.svg" alt="bucket"></button>   
         </div>
         
         <div class="edit-section">
@@ -81,10 +81,18 @@
         @mousedown="handleMouseDown" @mouseup="handleMouseUp" @mouseleave="handleMouseUp" @mousemove="handleMouseMove"></canvas>
         
         <div id="video-controls">
-          <button @click="previousFrame"><img src="@/assets/leftskip.png" alt="leftskip"></button>
-          <button @click="stop"><img src="@/assets/pause.png" alt="pause"></button>
-          <button @click="play"><img src="@/assets/play.png" alt="play"></button>
-          <button @click="nextFrame"><img src="@/assets/rightskip.png" alt="rightskip"></button>
+          <button @click="previousFrame">
+            <img src="@/assets/backward-solid.svg" alt="backward">
+          </button>
+          <button @click="stop">
+            <img src="@/assets/pause-solid.svg" alt="pause">
+          </button>
+          <button @click="play">
+            <img src="@/assets/play-solid.svg" alt="play">
+          </button>
+          <button @click="nextFrame">
+            <img src="@/assets/forward-solid.svg" alt="forward">
+          </button>
         </div>
 
         <span id="frame-parameters">
@@ -264,7 +272,7 @@ export default {
           density: false,
         },
         four: {
-          size: true,
+          size: false,
           opacity: true,
           particleSize: false,
           density: false,
